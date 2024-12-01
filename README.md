@@ -2,7 +2,7 @@
 My C# solutions to [Advent of Code 2024](https://adventofcode.com/2024).
 
 ## Set-up
-If you'd like to run my solutions on your input, you can clone this repo, and either manually create the file Inputs/Day{n}.txt, or alternatively you can run `dotnet user-secrets set SessionToken your-aoc-session-token`, and your input will be fetched automatically.
+If you'd like to run my solutions on your input, you can clone this repo, and either manually create the file `Inputs/Day{n}.txt`, or alternatively you can run `dotnet user-secrets set SessionToken your-aoc-session-token`, and your input will be fetched automatically.
 
 This project is using `.NET 9.0`.
 

@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# My actual gitignore
+/.vscode
+/AdventOfCode2024/Properties
+/Inputs
+/Outputs
