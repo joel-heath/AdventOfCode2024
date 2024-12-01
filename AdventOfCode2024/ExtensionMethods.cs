@@ -45,7 +45,7 @@ public static class ExtensionMethods
     }
 
     public static T[][] Transpose<T>(this IEnumerable<IEnumerable<T>> source)
-        => source.SelectMany(inner => inner.Select((item, index) => new { item, index }))
+        => source.SelectMany(inner => inner.Select((item, index) => (item, index)))
             .GroupBy(i => i.index, i => i.item)
             .Select(g => g.ToArray()).ToArray();
 

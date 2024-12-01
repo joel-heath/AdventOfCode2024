@@ -2,7 +2,7 @@
 
 namespace AdventOfCode2024;
 
-public static class Utils
+public static partial class Utils
 {
     /// <summary>
     /// Standard modulo doesn't exhibit expected behaviour for looping and wrapping indices (-1 % 5 != 4).
@@ -103,21 +103,22 @@ public static class Utils
         return (graph, nameToIndex);
     }
 
-    public static bool IsMatch(string pattern, string str)
-        => new Regex(pattern).Match(str).Success;
+    /* pattern = (?<capital>[A-Z])(?<remaining>\w+)
+     * data = "Hello, World!"
+     * returns [
+     *     { "0": "Hello", "capital": "H", "remaining": "ello" },
+     *     { "0": "World", "capital": "W", "remaining": "orld" }
+     * ]
+     */
+    public static IEnumerable<Dictionary<string, string>> MatchNamed(string input, string pattern)
+        => Regex.Matches(input, pattern).Select(match => match.Groups.Cast<Group>().ToDictionary(t => t.Name, t => t.Value));
 
-    public static Dictionary<string, string> MatchNamed(string pattern, string str)
-        => new Regex(pattern).Match(str).Groups.Cast<Group>().ToDictionary(t => t.Name, t => t.Value);
+    public static IEnumerable<Capture> FindAllOverlap(string input, string pattern)
+        => Regex.Matches(input, "(?=(" + pattern + "))").SelectMany(m => m.Groups[1].Captures);
 
-    public static string[] Matches(string pattern, string str)
-        => new Regex(pattern).Match(str).Groups.Cast<Group>().Select(t => t.Value).ToArray();
+    public static IEnumerable<long> GetLongs(string input)
+        => Integer().Matches(input).Select(M => long.Parse(M.Value));
 
-    public static IEnumerable<Capture> FindAll(string pattern, string str)
-        => new Regex(pattern).Matches(str).SelectMany(m => m.Groups.Cast<Group>().Select(g => g.Captures[0]));
-
-    public static IEnumerable<Capture> FindAllOverlap(string pattern, string str)
-        => new Regex("(?=(" + pattern + "))").Matches(str).SelectMany(m => m.Groups[1].Captures);
-
-    public static IEnumerable<long> GetLongs(string str)
-        => FindAll(@"-?\d+", str).Select(M => long.Parse(M.Value));
+    [GeneratedRegex(@"-?\d+")]
+    private static partial Regex Integer();
 }

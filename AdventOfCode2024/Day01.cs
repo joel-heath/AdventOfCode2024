@@ -14,14 +14,14 @@ public class Day01 : IDay
 
     public string SolvePart1(string input)
     {
-        var nums = input.Split(Environment.NewLine).Select(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)).Transpose();
+        var nums = input.Split(Environment.NewLine).Select(l => l.Split("   ").Select(int.Parse)).Transpose();
 
         return $"{nums[0].Order().Zip(nums[1].Order()).Sum(x => Math.Abs(x.First - x.Second))}";
     }
 
     public string SolvePart2(string input)
     {
-        var nums = input.Split(Environment.NewLine).Select(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)).Transpose();
+        var nums = input.Split(Environment.NewLine).Select(l => l.Split("   ").Select(int.Parse)).Transpose();
 
         return $"{nums[0].Sum(l => l * nums[1].Count(r => r == l))}";
     }
