@@ -364,6 +364,6 @@ FodyWeavers.xsd
 
 # My actual gitignore
 /.vscode
-/AdventOfCode2024/Properties
 /Inputs
 /Outputs
+/AdventOfCode2024/Properties/launchSettings.json

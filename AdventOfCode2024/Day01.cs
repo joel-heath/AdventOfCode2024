@@ -14,40 +14,15 @@ public class Day01 : IDay
 
     public string SolvePart1(string input)
     {
-        var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var nums = input.Split(Environment.NewLine).Select(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)).Transpose();
 
-        List<int> left = [], right = [];
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            var line = lines[i].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-
-            left.Add(line[0]);
-            right.Add(line[1]);
-        }
-
-        var lefts = left.OrderBy(t => t).ToList();
-        var rights = right.OrderBy(t => t).ToList();
-
-        return $"{lefts.Zip(rights).Select(x => Math.Abs(x.First - x.Second)).Sum()}";
+        return $"{nums[0].Order().Zip(nums[1].Order()).Sum(x => Math.Abs(x.First - x.Second))}";
     }
 
     public string SolvePart2(string input)
     {
-        var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var nums = input.Split(Environment.NewLine).Select(l => l.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)).Transpose();
 
-        List<int> left = [], right = [];
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            var line = lines[i].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
-
-            left.Add(line[0]);
-            right.Add(line[1]);
-        }
-
-        var lefts = left.Sum(l => l * right.Count(r => r == l));
-
-        return $"{lefts}";
+        return $"{nums[0].Sum(l => l * nums[1].Count(r => r == l))}";
     }
 }
