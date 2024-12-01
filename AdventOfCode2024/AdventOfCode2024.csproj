@@ -13,4 +13,8 @@
     <PackageReference Include="TextCopy" Version="6.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+	<None Include="..\README.md" Link="README.md" />
+  </ItemGroup>
+
 </Project>

@@ -18,7 +18,7 @@ Here you can easily navigate each days code and read about how well I think I di
 
 | **Day** | **Verbosity** | **Notes** |
 |:---:|:---:|:---:|
-| [1](AdventOfCode2024/Day01.cs) | ⚫ |  |
+| [1](AdventOfCode2024/Day01.cs) | 🟡 | Today's was undeserving of the one-liner status, due to the handling of two lists in parallel. Otherwise, a simple start to this year's puzzles. |
 | [2](AdventOfCode2024/Day02.cs) | ⚫ |  |
 | [3](AdventOfCode2024/Day03.cs) | ⚫ |  |
 | [4](AdventOfCode2024/Day04.cs) | ⚫ |  |
