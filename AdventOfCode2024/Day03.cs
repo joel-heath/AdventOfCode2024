@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode2024;
 
-public class Day03 : IDay
+public partial class Day03 : IDay
 {
     public int Day => 3;
     public Dictionary<string, string> UnitTestsP1 => new()
@@ -15,16 +15,24 @@ public class Day03 : IDay
     };
 
     public string SolvePart1(string input)
-    {
-        var matches = Regex.Matches(input, @"mul\((\d+),(\d+)\)").Select(m => m.Groups.Cast<Group>().Select(g => g.Captures.Select(c => int.Parse(c.Value))).Skip(1).SelectMany(e => e).ToArray());
-        return $"{matches.Sum(m => m[0] * m[1])}";
-    }
+        => $"{Multiply().Matches(input)
+            .Select(m => m.Groups.Cast<Group>()
+                .Select(g => int.Parse(g.Value))
+                .Skip(1)
+                .Aggregate((a, n) => a * n)
+            ).Sum()}";
 
     public string SolvePart2(string input)
     {
-        var muls = Regex.Matches(input, @"mul\((\d+),(\d+)\)").Select(m => m.Groups.Cast<Group>().Select(g => g.Captures.Select(c => (n: int.Parse(c.Value), i: c.Index))).Skip(1).SelectMany(e => e).ToArray());
-        var dos = Regex.Matches(input, @"do(n't)?\(\)").Select(m => (b: m.Value == "do()", i: m.Index)).Reverse().ToArray();
+        var muls = Multiply().Matches(input).Select(m => m.Groups.Cast<Group>().Select(g => (n: int.Parse(g.Value), i: g.Index)).Skip(1).ToArray());
+        var dos = DoDonts().Matches(input).Select(m => (b: m.Value == "do()", i: m.Index)).Reverse().ToArray();
 
-        return $"{muls.Where(m => dos.FirstOrDefault(d => d.i < m[0].i, (b:true, i:-1)).b).Sum(m => m[0].n * m[1].n)}";
+        return $"{muls.Where(m => dos.FirstOrDefault(d => d.i < m[0].i, (b: true, i: -1)).b).Sum(m => m[0].n * m[1].n)}";
     }
+
+    [GeneratedRegex(@"mul\((\d+),(\d+)\)")]
+    private static partial Regex Multiply();
+
+    [GeneratedRegex(@"do(n't)?\(\)")]
+    private static partial Regex DoDonts();
 }
