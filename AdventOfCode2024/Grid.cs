@@ -130,10 +130,23 @@ public class Grid<T>(int x, int y)
         else throw new ArgumentException("Invalid direction, may only be 0-1 (N-S,E-W)", nameof(direction));
     }
 
-    public IEnumerable<Point> LineTo(Point start, Point end, bool inclusive = true)
+    public IEnumerable<T> LineTo(Point start, Point end, bool inclusive = true)
     {
-        if (!Contains(start) || !Contains(end)) yield break;
+        ///if (!(start.X == end.X || start.Y == end.Y)
 
+        int xCmp = end.X.CompareTo(start.X);
+        int yCmp = end.Y.CompareTo(start.Y);
+
+        for (long x = start.X, y = start.Y; (x, y) != end; x += xCmp, y += yCmp) // (xCmp == 0 ? true : (xCmp < 0 ? x <= end.X : x >= end.X)) && (yCmp == 0 ? true : (yCmp < 0 ? y <= end.Y : y >= end.Y))
+        {
+            if (Contains((x, y)))
+                yield return this[(x, y)];
+        }
+
+        if (inclusive && Contains(end))
+            yield return this[end];
+
+        /*
         if (start.X == end.X)
         {
             long small = Math.Min(start.Y, end.Y);
@@ -141,7 +154,8 @@ public class Grid<T>(int x, int y)
 
             for (long i = small; !inclusive && i < large || inclusive && i <= large; i++)
             {
-                yield return (start.X, i);
+                if (!Contains((start.X, i))) yield break;
+                yield return this[(start.X, i)];
             }
         }
         else if (start.Y == end.Y)
@@ -151,13 +165,14 @@ public class Grid<T>(int x, int y)
 
             for (long i = small; !inclusive && i < large || inclusive && i <= large; i++)
             {
-                yield return (start.X, i);
+                if (!Contains((i, start.Y))) yield break;
+                yield return this[(i, start.Y)];
             }
         }
         else
         {
             throw new Exception($"Not a straight line between {start} and {end}");
-        }
+        }*/
     }
 
     public override string ToString()
