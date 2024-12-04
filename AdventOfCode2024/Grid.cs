@@ -132,12 +132,13 @@ public class Grid<T>(int x, int y)
 
     public IEnumerable<T> LineTo(Point start, Point end, bool inclusive = true)
     {
-        ///if (!(start.X == end.X || start.Y == end.Y)
+        if (!(start.X == end.X || start.Y == end.Y || Math.Abs(start.X - end.X) == Math.Abs(start.Y - end.Y)))
+            throw new ArgumentException("Points must be aligned horizontally, vertically, or diagonally");
 
         int xCmp = end.X.CompareTo(start.X);
         int yCmp = end.Y.CompareTo(start.Y);
 
-        for (long x = start.X, y = start.Y; (x, y) != end; x += xCmp, y += yCmp) // (xCmp == 0 ? true : (xCmp < 0 ? x <= end.X : x >= end.X)) && (yCmp == 0 ? true : (yCmp < 0 ? y <= end.Y : y >= end.Y))
+        for (long x = start.X, y = start.Y; (x, y) != end; x += xCmp, y += yCmp)
         {
             if (Contains((x, y)))
                 yield return this[(x, y)];
@@ -145,34 +146,6 @@ public class Grid<T>(int x, int y)
 
         if (inclusive && Contains(end))
             yield return this[end];
-
-        /*
-        if (start.X == end.X)
-        {
-            long small = Math.Min(start.Y, end.Y);
-            long large = Math.Max(start.Y, end.Y);
-
-            for (long i = small; !inclusive && i < large || inclusive && i <= large; i++)
-            {
-                if (!Contains((start.X, i))) yield break;
-                yield return this[(start.X, i)];
-            }
-        }
-        else if (start.Y == end.Y)
-        {
-            long small = Math.Min(start.X, end.X);
-            long large = Math.Max(start.X, end.X);
-
-            for (long i = small; !inclusive && i < large || inclusive && i <= large; i++)
-            {
-                if (!Contains((i, start.Y))) yield break;
-                yield return this[(i, start.Y)];
-            }
-        }
-        else
-        {
-            throw new Exception($"Not a straight line between {start} and {end}");
-        }*/
     }
 
     public override string ToString()

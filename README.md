@@ -21,7 +21,7 @@ Here you can easily navigate each days code and read about how well I think I di
 | [1](AdventOfCode2024/Day01.cs) | 🟡 | Today's was undeserving of the one-liner status, due to the handling of two lists in parallel. Otherwise, a simple start to this year's puzzles. |
 | [2](AdventOfCode2024/Day02.cs) | 🟢 | My approach for part two was just to create all possible subsets of size `n-1` and see if any of them are valid. |
 | [3](AdventOfCode2024/Day03.cs) | 🟡 | Part one was a nice one-liner but unfortunately not part 2. My approach was to use Regex groups to extract all the numbers and find the indices of the `do()`s and `don't()`s. |
-| [4](AdventOfCode2024/Day04.cs) | ⚫ |  |
+| [4](AdventOfCode2024/Day04.cs) | 🟡 | Very happy with today's solution, using my `Grid` class and it's `LineTo()` function (though I had to completely rewrite it). |
 | [5](AdventOfCode2024/Day05.cs) | ⚫ |  |
 | [6](AdventOfCode2024/Day06.cs) | ⚫ |  |
 | [7](AdventOfCode2024/Day07.cs) | ⚫ |  |
