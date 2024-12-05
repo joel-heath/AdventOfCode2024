@@ -14,6 +14,7 @@ internal class Program
         var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
         var sessionToken = config["SessionToken"] ?? throw new NotSupportedException($"No session token available to get input. Please manually provide the problem input at \"\\Inputs\\Day{day}.txt\"");
         string responseBody;
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("Fetching input...");
         using (var handler = new HttpClientHandler { UseCookies = false })
         using (var client = new HttpClient(handler))

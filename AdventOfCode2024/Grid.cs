@@ -72,62 +72,100 @@ public class Grid<T>(int x, int y)
     public IEnumerable<Point> LineOut(Point start, int direction, bool inclusive)
     {
         if (!Contains(start)) yield break;
-
         if (inclusive) yield return start;
 
-        if (direction == 0) // North
+        switch (direction)
         {
-            for (long i = start.Y - 1; i >= 0; i--)
-            {
-                yield return (start.X, i);
-            }
+            case 0: // North
+                for (long i = start.Y - 1; i >= 0; i--)
+                {
+                    yield return (start.X, i);
+                }
+                break;
+            case 1: // East
+                for (long i = start.X + 1; i < Width; i++)
+                {
+                    yield return (i, start.Y);
+                }
+                break;
+            case 2: // South
+                for (long i = start.Y + 1; i < Height; i++)
+                {
+                    yield return (start.X, i);
+                }
+                break;
+            case 3: // West
+                for (long i = start.X - 1; i >= 0; i--)
+                {
+                    yield return (i, start.Y);
+                }
+                break;
+            case 4: // North-East
+                for (long i = 1; start.X + i < Width && start.Y - i >= 0; i++)
+                {
+                    yield return (start.X + i, start.Y - i);
+                }
+                break;
+            case 5: // South-East
+                for (long i = 1; start.X + i < Width && start.Y + i < Height; i++)
+                {
+                    yield return (start.X + i, start.Y + i);
+                }
+                break;
+            case 6: // South-West
+                for (long i = 1; start.X - i >= 0 && start.Y + i < Height; i++)
+                {
+                    yield return (start.X - i, start.Y + i);
+                }
+                break;
+            case 7: // North-West
+                for (long i = 1; start.X - i >= 0 && start.Y - i >= 0; i++)
+                {
+                    yield return (start.X - i, start.Y - i);
+                }
+                break;
+            default:
+                throw new ArgumentException("Invalid direction, may only be 0-3 (N,E,S,W) or 4-7 (NE,SE,SW,NW)", nameof(direction));
         }
-        else if (direction == 2) // South
-        {
-            for (long i = start.Y + 1; i < Height; i++)
-            {
-                yield return (start.X, i);
-            }
-        }
-        else if (direction == 3) // West
-        {
-            for (long i = start.X - 1; i >= 0; i--)
-            {
-                yield return (i, start.Y);
-            }
-        }
-        else if (direction == 1) // East
-        {
-            for (long i = start.X + 1; i < Width; i++)
-            {
-                yield return (i, start.Y);
-            }
-        }
-        else { throw new ArgumentException("Invalid direction, may only be 0-3 (N,E,S,W)", nameof(direction)); }
     }
 
-    public IEnumerable<Point> LineThrough(Point target, int direction, bool inclusive)
+    public IEnumerable<Point> LineThrough(Point target, int direction, bool inclusive = true)
     {
         if (!Contains(target)) yield break;
 
-        if (direction == 0) // North to south
+        switch (direction)
         {
-            for (int i = 0; i < Height; i++)
-            {
-                if (!inclusive || (i != target.Y))
-                    yield return (target.X, i);
-            }
+            case 0: // North to south
+                for (int i = 0; i < Height; i++)
+                {
+                    if (!inclusive || (i != target.Y))
+                        yield return (target.X, i);
+                }
+                break;
+            case 1: // East to west
+                for (int i = 0; i < Width; i++)
+                {
+                    if (!inclusive || (i != target.X))
+                        yield return (target.Y, i);
+                }
+                break;
+            case 2: // North-West to South-East
+                for (int i = 0; i < Width; i++)
+                {
+                    if (!inclusive || (i != target.X))
+                        yield return (i, i);
+                }
+                break;
+            case 3: // North-East to South-West
+                for (int i = 0; i < Width; i++)
+                {
+                    if (!inclusive || (i != target.X))
+                        yield return (Width - i - 1, i);
+                }
+                break;
+            default:
+                throw new ArgumentException("Invalid direction, may only be 0-1 (N-S,E-W) or 2-3 (NW-SE, NE, SW)", nameof(direction));
         }
-        else if (direction == 1) // East to west
-        {
-            for (int i = 0; i < Width; i++)
-            {
-                if (!inclusive || (i != target.X))
-                    yield return (target.Y, i);
-            }
-        }
-        
-        else throw new ArgumentException("Invalid direction, may only be 0-1 (N-S,E-W)", nameof(direction));
     }
 
     public IEnumerable<T> LineTo(Point start, Point end, bool inclusive = true)
