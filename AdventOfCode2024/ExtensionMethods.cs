@@ -155,6 +155,39 @@ public static class ExtensionMethods
         }
     }
 
+    private static IEnumerable<T> GenerateIterator<T>(Func<int, T> generator, int count)
+    {
+        for (int index = 0; index < count; index++)
+        {
+            yield return generator(index);
+        }
+    }
+
+    public static IEnumerable<IEnumerable<T>> ToJagged<T>(this T[,] source)
+        => GenerateIterator(i => 
+            GenerateIterator(j =>
+                source[i, j], source.GetLength(1)),
+            source.GetLength(0));
+
+    public static IEnumerable<IEnumerable<IEnumerable<T>>> ToJagged<T>(this T[,,] source)
+        => GenerateIterator(i =>
+            GenerateIterator(j =>
+                GenerateIterator(k => source[i, j, k], source.GetLength(2)),
+                source.GetLength(1)),
+            source.GetLength(0));
+
+    public static IEnumerable<T> Flatten<T>(this T[,] source)
+    {
+        foreach (var item in source) yield return item;
+    }
+
+    public static IEnumerable<T> Flatten<T>(this T[,,] source)
+    {
+        foreach (var item in source) yield return item;
+    }
+
+
+
     public static bool InvokeTruthfully(this Action action)
     {
         action.Invoke();

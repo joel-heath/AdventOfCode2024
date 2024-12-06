@@ -24,7 +24,7 @@ Here you can easily navigate each days code and read about how well I think I di
 | [3](AdventOfCode2024/Day03.cs) | 🟢 | Part one was a nice one-liner but unfortunately not part 2. My approach was to use Regex groups to extract all the numbers and find the indices of the `do()`s and `don't()`s. |
 | [4](AdventOfCode2024/Day04.cs) | 🟢 | Very happy with today's solution, using my `Grid` class and it's `LineTo()` function (though I had to completely rewrite it). |
 | [5](AdventOfCode2024/Day05.cs) | 🟢 | Today's allowed me to make use of my custom `AggregateWhile()` function which is exciting, along with `EnumerateForever()` which sounds a bit silly but makes sense alongside `AggregateWhile()`. |
-| [6](AdventOfCode2024/Day06.cs) | 🟡 | I bruteforced part 2, checking if a loop occurs with an obstacle on each position in part 1's path, it takes about 3 seconds on my PC so could be improved but certainly good enough. |
+| [6](AdventOfCode2024/Day06.cs) | 🟡 | I brute-forced part 2, limiting my options to only part 1's solution and used some parallelisation to improve speed. |
 | [7](AdventOfCode2024/Day07.cs) | ⚫ |  |
 | [8](AdventOfCode2024/Day08.cs) | ⚫ |  |
 | [9](AdventOfCode2024/Day09.cs) | ⚫ |  |
