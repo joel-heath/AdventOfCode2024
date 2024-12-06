@@ -32,6 +32,16 @@ public static partial class Utils
             start += inc;
         }
     }
+    public static IEnumerable<int> Range(int start, int count)
+    {
+        int end = start + count;
+        int inc = end < start ? -1 : 1;
+        while (start != end)
+        {
+            yield return start;
+            start += inc;
+        }
+    }
 
     /// <summary>
     /// Utils.Range but with a custom increment, therefore count is absolute
