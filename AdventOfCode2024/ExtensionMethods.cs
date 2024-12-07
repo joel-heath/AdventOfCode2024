@@ -49,10 +49,18 @@ public static class ExtensionMethods
             .GroupBy(i => i.index, i => i.item)
             .Select(g => g.ToArray()).ToArray();
 
+
     public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> elements, int k)
         => k == 0 ? [[]] :
           elements.SelectMany((e, i) =>
             elements.Skip(i + 1).Combinations(k - 1).Select(c => (new[] { e }).Concat(c)));
+
+
+    public static IEnumerable<IEnumerable<T>> Multichoose<T>(this IEnumerable<T> elements, int k)
+    => k == 0 ? [[]] :
+      elements.SelectMany((e, i) =>
+        elements.Multichoose(k - 1).Select(c => (new[] { e }).Concat(c)));
+
 
     public static IEnumerable<TAcc> Scan<TSource, TAcc>(this IEnumerable<TSource> source, TAcc seed, Func<TAcc, TSource, TAcc> func)
     {
