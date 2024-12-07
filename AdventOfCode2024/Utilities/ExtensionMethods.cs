@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2024;
+﻿namespace AdventOfCode2024.Utilities;
 
 public static class ExtensionMethods
 {
@@ -48,18 +48,6 @@ public static class ExtensionMethods
         => source.SelectMany(inner => inner.Select((item, index) => (item, index)))
             .GroupBy(i => i.index, i => i.item)
             .Select(g => g.ToArray()).ToArray();
-
-
-    public static IEnumerable<IEnumerable<T>> Combinations<T>(this IEnumerable<T> elements, int k)
-        => k == 0 ? [[]] :
-          elements.SelectMany((e, i) =>
-            elements.Skip(i + 1).Combinations(k - 1).Select(c => (new[] { e }).Concat(c)));
-
-
-    public static IEnumerable<IEnumerable<T>> Multichoose<T>(this IEnumerable<T> elements, int k)
-    => k == 0 ? [[]] :
-      elements.SelectMany((e, i) =>
-        elements.Multichoose(k - 1).Select(c => (new[] { e }).Concat(c)));
 
 
     public static IEnumerable<TAcc> Scan<TSource, TAcc>(this IEnumerable<TSource> source, TAcc seed, Func<TAcc, TSource, TAcc> func)
@@ -172,7 +160,7 @@ public static class ExtensionMethods
     }
 
     public static IEnumerable<IEnumerable<T>> ToJagged<T>(this T[,] source)
-        => GenerateIterator(i => 
+        => GenerateIterator(i =>
             GenerateIterator(j =>
                 source[i, j], source.GetLength(1)),
             source.GetLength(0));

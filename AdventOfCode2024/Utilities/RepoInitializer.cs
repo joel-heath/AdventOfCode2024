@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2024;
+﻿namespace AdventOfCode2024.Utilities;
 
 public static class RepoInitializer
 {
@@ -10,7 +10,7 @@ public static class RepoInitializer
         for (int i = 1; i <= 25; i++)
         {
             using StreamWriter dayWriter = new(new FileStream(Path.Join(path, $"Day{i:00}.cs"), FileMode.Create));
-            tasks[i-1] = dayWriter.WriteAsync(DayCode.Replace("{{DAY}}", $"{i}").Replace("{{DAY_2D}}", $"{i:00}"));
+            tasks[i - 1] = dayWriter.WriteAsync(DayCode.Replace("{{DAY}}", $"{i}").Replace("{{DAY_2D}}", $"{i:00}"));
         }
 
         using StreamWriter readmeWriter = new(new FileStream(Path.Join(workingDirectory.Parent!.FullName, $"README.md"), FileMode.Create));
@@ -20,7 +20,9 @@ public static class RepoInitializer
     }
 
     private static readonly string DayCode =
-$@"namespace {typeof(Program).Namespace}" + @";
+$@"using {typeof(Program).Namespace}.Utilities;
+
+namespace {typeof(Program).Namespace};" + @"
 
 public class Day{{DAY_2D}} : IDay
 {

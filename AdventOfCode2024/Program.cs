@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using TextCopy;
+using AdventOfCode2024.Utilities;
 
 namespace AdventOfCode2024;
 

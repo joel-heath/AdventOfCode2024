@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AdventOfCode2024;
+namespace AdventOfCode2024.Utilities;
 
 public class Grid<T>(int x, int y)
 {
@@ -49,8 +49,8 @@ public class Grid<T>(int x, int y)
 
     public bool Contains(Point p) => 0 <= p.X && p.X < Width && 0 <= p.Y && p.Y < Height;
 
-    public static readonly IEnumerable<Point> CardinalVectors = new Point[] { (0, -1), (1, 0), (0, 1), (-1, 0) };
-    public static readonly IEnumerable<Point> DiagonalVectors = new Point[] { (1, -1), (1, 1), (-1, 1), (-1, -1) };
+    public static readonly IEnumerable<Point> CardinalVectors = [(0, -1), (1, 0), (0, 1), (-1, 0)];
+    public static readonly IEnumerable<Point> DiagonalVectors = [(1, -1), (1, 1), (-1, 1), (-1, -1)];
 
     public IEnumerable<Point> Adjacents(Point p, bool includeDiagonals = false)
     {
@@ -138,28 +138,28 @@ public class Grid<T>(int x, int y)
             case 0: // North to south
                 for (int i = 0; i < Height; i++)
                 {
-                    if (!inclusive || (i != target.Y))
+                    if (!inclusive || i != target.Y)
                         yield return (target.X, i);
                 }
                 break;
             case 1: // East to west
                 for (int i = 0; i < Width; i++)
                 {
-                    if (!inclusive || (i != target.X))
+                    if (!inclusive || i != target.X)
                         yield return (target.Y, i);
                 }
                 break;
             case 2: // North-West to South-East
                 for (int i = 0; i < Width; i++)
                 {
-                    if (!inclusive || (i != target.X))
+                    if (!inclusive || i != target.X)
                         yield return (i, i);
                 }
                 break;
             case 3: // North-East to South-West
                 for (int i = 0; i < Width; i++)
                 {
-                    if (!inclusive || (i != target.X))
+                    if (!inclusive || i != target.X)
                         yield return (Width - i - 1, i);
                 }
                 break;

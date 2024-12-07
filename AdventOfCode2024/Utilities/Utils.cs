@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace AdventOfCode2024;
+namespace AdventOfCode2024.Utilities;
 
 public static partial class Utils
 {
