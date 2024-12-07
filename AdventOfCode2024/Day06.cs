@@ -50,9 +50,10 @@ public class Day06 : IDay
         var len = lines[0].Length + Environment.NewLine.Length;
         var start = (x: index % len, y: index / len, d: 0);
         
-        return $"{Task.WhenAll(Explore(lines, start)[1..]
+        return $"{Explore(lines, start)[1..]
             .Select(p => lines.Select((l, y) => y == p.y ? l[..p.x] + '#' + l[(p.x + 1)..] : l).ToArray())
-            .Select(l => Task.Run(() => Explore(l, start)[^1]))).Result
+            .AsParallel()
+            .Select(l => Explore(l, start)[^1])
             .Count(p => p.x != 0 && p.y != 0 && p.x != lines[0].Length - 1 && p.y != lines.Length - 1)}";
     }
 }

@@ -21,6 +21,7 @@ public class Day07 : IDay
         => input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
             .Select(l => l.Split(' '))
             .Select(l => (testValue: long.Parse(l[0][..^1]), operands: l[1..].Select(long.Parse).ToList()))
+            .AsParallel()
             .Sum(l => operators.Multichoose(l.operands.Count - 1).Any(
                 sequence => sequence.Zip(l.operands[1..]).AggregateWhile(l.operands[0], (acc, d) =>
                     d.First switch
