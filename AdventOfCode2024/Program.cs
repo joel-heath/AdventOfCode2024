@@ -2,6 +2,9 @@
 using System.Reflection;
 using TextCopy;
 using AdventOfCode2024.Utilities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
+using System.Diagnostics;
 
 namespace AdventOfCode2024;
 
@@ -67,7 +70,7 @@ internal class Program
         return choice.Value;
     }
 
-    static IDay GetUserDay()
+    static IDay PromptDay()
     {
         IDay? day = null;
         while (day == null)
@@ -82,6 +85,19 @@ internal class Program
         Console.ForegroundColor = ConsoleColor.Gray;
         return day;
     }
+
+    static int PromptPart()
+    {
+        Console.Write("Solve for part 1 or 2? ");
+        return BinaryChoice('1', '2') ? 1 : 2;
+    }
+
+    static bool PromptTests()
+    {
+        Console.Write("Run unit tests? ");
+        return BinaryChoice('Y', 'N');
+    }
+
 
     static void UnitTests(IDay day, int part)
     {
@@ -127,6 +143,7 @@ internal class Program
         string startupPath = FindSolutionPath(); //  ASSUMING WE ARE IN AdventOfCode2024\AdventOfCode2024\bin\Debug\net9.0\ it would be Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName;
         IDay day;
         int part;
+        bool runTests;
 
         if (args.Contains("init"))
         {
@@ -134,6 +151,20 @@ internal class Program
             Console.WriteLine("Repo initialized");
             return;
         }
+        day = args.Length >= 1
+            ? IDay.TryGetDay((args[0].Length == 1 ? "0" : "") + args[0]) ?? throw new ArgumentNullException(nameof(args), "Invalid day [1,25]")
+            : PromptDay();
+        part = args.Length >= 2
+            ? (int.TryParse(args[1].Trim(' '), out part) && (part == 1 || part == 2)) ? part : throw new ArgumentNullException(nameof(args), "Invalid part [1,2]")
+            : PromptPart();
+        runTests = args.Length >= 3
+            && args[2] == "1"
+            || PromptTests();
+
+        if (runTests)
+            UnitTests(day, part);
+
+        /*
         if (args.Length == 3)
         {
             day = IDay.TryGetDay((args[0].Length == 1 ? "0" : "") + args[0]) ?? throw new ArgumentNullException(nameof(args), "Invalid day [1,25]");
@@ -147,7 +178,7 @@ internal class Program
             part = BinaryChoice('1', '2') ? 1 : 2;
             Console.Write("Run test inputs? ");
             if (BinaryChoice('Y', 'N')) { Console.WriteLine(); UnitTests(day, part); }
-        }
+        }*/
 
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"{Environment.NewLine}Day {day.Day} Part {part}");
@@ -168,7 +199,9 @@ internal class Program
         //Console.WriteLine($"Input: {input}");
         Console.Write("Output: ");
 
+        Stopwatch sw = Stopwatch.StartNew();
         string output = part == 1 ? day.SolvePart1(input) : day.SolvePart2(input);
+        sw.Stop();
 
         if (output.Contains(Environment.NewLine)) // if its a single-line answer put it inline with Output: 
             Console.WriteLine();                  // otherwise put it all on the next line
@@ -187,6 +220,15 @@ internal class Program
         }
 
         Console.WriteLine($"The output has also been written to {outputLocation}");
+        Console.WriteLine($"Execution took {(
+            sw.Elapsed.TotalHours >= 1
+            ? $"{sw.Elapsed}:hh\\:mm\\:ss\\.fff"
+            : sw.Elapsed.TotalMinutes >= 1
+            ? $"{sw.Elapsed}:mm\\:ss\\.fff"
+            : sw.Elapsed.TotalSeconds >= 1
+            ? $"{sw.Elapsed.Seconds}s {sw.Elapsed.Milliseconds}ms"
+            : $"{sw.Elapsed.Milliseconds}ms"
+        )}");
 
         Console.ReadKey();
     }

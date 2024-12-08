@@ -6,11 +6,13 @@ public static class ExtensionMethods
     {
         var data = new List<T>();
 
+        Console.WriteLine("[");
         foreach (var item in input)
         {
             Console.WriteLine(item);
             data.Add(item);
         }
+        Console.WriteLine("]");
 
         return data;
     }

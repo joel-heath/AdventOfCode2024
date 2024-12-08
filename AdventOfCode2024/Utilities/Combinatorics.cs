@@ -46,18 +46,18 @@ public static class CombinatoricsExtensionMethods
 
     private static IEnumerable<IEnumerable<T>> Choose<T>(IList<T> elements, int k)
         => k == 0 ? [[]] :
-          elements.SelectMany((e, i) =>
-            elements.Skip(i + 1).Choose(k - 1).Select(c => (new[] { e }).Concat(c)));
-
+            elements.SelectMany((e, i) =>
+                elements.Skip(i + 1).Choose(k - 1)
+                    .Select(c => c.Prepend(e)));
 
     public static IEnumerable<IEnumerable<T>> Multichoose<T>(this IEnumerable<T> elements, int k)
         => elements is IList<T> list ? Multichoose(list, k) : Multichoose(elements.ToList(), k);
 
     private static IEnumerable<IEnumerable<T>> Multichoose<T>(IList<T> elements, int k)
         => k == 0 ? [[]] :
-          elements.SelectMany((e, i) =>
-            elements.Multichoose(k - 1).Select(c => (new[] { e }).Concat(c)));
-
+            elements.SelectMany(e =>
+                elements.Multichoose(k - 1)
+                    .Select(c => c.Prepend(e)));
 
     public static IEnumerable<IEnumerable<T>> Permute<T>(this IEnumerable<T> elements)
         => elements is IList<T> list ? Permute(list) : Permute(elements.ToList());

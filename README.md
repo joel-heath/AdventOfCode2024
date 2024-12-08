@@ -25,7 +25,7 @@ Here you can easily navigate each days code and read about how well I think I di
 | [4](AdventOfCode2024/Day04.cs) | 🟢 | Very happy with today's solution, using my `Grid` class and it's `LineTo()` function (though I had to completely rewrite it). |
 | [5](AdventOfCode2024/Day05.cs) | 🟢 | Today's allowed me to make use of my custom `AggregateWhile()` function which is exciting, along with `EnumerateForever()` which sounds a bit silly but makes sense alongside `AggregateWhile()`. |
 | [6](AdventOfCode2024/Day06.cs) | 🟡 | I brute-forced part 2, limiting my options to only part 1's solution and used some parallelisation to improve speed. |
-| [7](AdventOfCode2024/Day07.cs) | 🔵 | Today I am overjoyed as I don't have to make very inefficient, unreadable and unnecessary decisions to force my solution into one line (which I did much of in [2023](https://github.com/joel-heath/AdventOfCode2023/blob/master/AdventOfCode2023/Day20.cs)). My part 2 took about 16s, and I got that down to 5s with parallelisation. |
+| [7](AdventOfCode2024/Day07.cs) | 🔵 | Today I am overjoyed as I don't have to make very inefficient, unreadable and unnecessary decisions to force my solution into one line (which I did much of in [2023](https://github.com/joel-heath/AdventOfCode2023/blob/master/AdventOfCode2023/Day20.cs)). My part 2 takes ~~16s~~, ~~5s with parallelisation.~~ 1.5s with parallelisation & memoisation |
 | [8](AdventOfCode2024/Day08.cs) | ⚫ |  |
 | [9](AdventOfCode2024/Day09.cs) | ⚫ |  |
 | [10](AdventOfCode2024/Day10.cs) | ⚫ |  |

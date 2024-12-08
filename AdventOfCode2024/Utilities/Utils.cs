@@ -69,10 +69,10 @@ public static partial class Utils
     {
         while (true) yield return value;
     }
-    public static IEnumerable<object> EnumerateForever()
+    public static IEnumerable<int> EnumerateForever()
     {
-        var obj = new object();
-        while (true) yield return obj;
+        int index = 0;
+        while (true) yield return index++;
     }
 
     public static long GCF(long a, long b) => EnumerateForever().AggregateWhile((a, b), (acc, _) => (acc.b, acc.a % acc.b), acc => acc.b != 0).a;
