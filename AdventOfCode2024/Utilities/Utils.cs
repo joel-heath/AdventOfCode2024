@@ -69,6 +69,7 @@ public static partial class Utils
     {
         while (true) yield return value;
     }
+
     public static IEnumerable<int> EnumerateForever()
     {
         int index = 0;
