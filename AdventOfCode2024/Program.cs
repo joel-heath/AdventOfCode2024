@@ -2,8 +2,6 @@
 using System.Reflection;
 using TextCopy;
 using AdventOfCode2024.Utilities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 
 namespace AdventOfCode2024;
@@ -140,7 +138,7 @@ internal class Program
 
     static async Task Main(string[] args)
     {
-        string startupPath = FindSolutionPath(); //  ASSUMING WE ARE IN AdventOfCode2024\AdventOfCode2024\bin\Debug\net9.0\ it would be Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName;
+        string startUpPath = FindSolutionPath(); //  ASSUMING WE ARE IN AdventOfCode2024\AdventOfCode2024\bin\Debug\net9.0\ it would be Directory.GetParent(AppContext.BaseDirectory)!.Parent!.Parent!.Parent!.Parent!.FullName;
         IDay day;
         int part;
         bool runTests;
@@ -183,7 +181,7 @@ internal class Program
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine($"{Environment.NewLine}Day {day.Day} Part {part}");
 
-        var inputPath = Path.Combine(startupPath, @$"Inputs\Day{day.Day}.txt");
+        var inputPath = Path.Combine(startUpPath, @$"Inputs\Day{day.Day}.txt");
         string input;
 
         if (Path.Exists(inputPath))
@@ -208,7 +206,7 @@ internal class Program
 
         Console.WriteLine(output);
 
-        string outputLocation = Path.Combine(startupPath, @$"Outputs\Day{day.Day}Part{part}.txt");
+        string outputLocation = Path.Combine(startUpPath, @$"Outputs\Day{day.Day}Part{part}.txt");
 
         await ClipboardService.SetTextAsync(output);
         Console.ForegroundColor = ConsoleColor.DarkGray;

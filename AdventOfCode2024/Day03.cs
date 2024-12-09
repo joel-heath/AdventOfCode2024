@@ -24,8 +24,13 @@ public partial class Day03 : IDay
 
     public string SolvePart2(string input)
     {
-        var muls = Multiply().Matches(input).Select(m => m.Groups.Cast<Group>().Select(g => (n: int.Parse(g.Value), i: g.Index)).Skip(1).ToArray());
-        var dos = DoDonts().Matches(input).Select(m => (b: m.Value == "do()", i: m.Index)).Reverse().ToArray();
+        var muls = Multiply().Matches(input)
+            .Select(m => m.Groups.Cast<Group>()
+                .Select(g => (n: int.Parse(g.Value), i: g.Index))
+                .Skip(1).ToArray());
+        var dos = DoDonts().Matches(input)
+            .Select(m => (b: m.Value == "do()", i: m.Index))
+            .Reverse().ToArray();
 
         return $"{muls.Where(m => dos.FirstOrDefault(d => d.i < m[0].i, (b: true, i: -1)).b).Sum(m => m[0].n * m[1].n)}";
     }

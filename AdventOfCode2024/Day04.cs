@@ -24,13 +24,13 @@ public class Day04 : IDay
 
     public string SolvePart1(string input)
     {
-        var grid = new Grid<char>(input.Split(Environment.NewLine).Select(l => l.ToCharArray()).ToArray());
+        var grid = Grid<char>.FromString(input);
         return $"{grid.AllPositions().Sum(p => CountXMAS(p.X, p.Y, grid))}";
     }
 
     public string SolvePart2(string input)
     {
-        var grid = new Grid<char>(input.Split(Environment.NewLine).Select(l => l.ToCharArray()).ToArray());
+        var grid = Grid<char>.FromString(input);
         return $"{grid.AllPositions().Sum(p => CountX_MAS(p.X, p.Y, grid))}";
     }
 }

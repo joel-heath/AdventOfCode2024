@@ -46,6 +46,10 @@ public class Grid<T>(int x, int y)
             }
         }
     }
+    public static Grid<char> FromString(string contents)
+        => new(contents.Split(Environment.NewLine).Select(l => l.ToCharArray()).ToArray());
+    public static Grid<char> FromString(string contents, string rowDelimiter)
+        => new(contents.Split(rowDelimiter).Select(l => l.ToCharArray()).ToArray());
 
     public bool Contains(Point p) => 0 <= p.X && p.X < Width && 0 <= p.Y && p.Y < Height;
 

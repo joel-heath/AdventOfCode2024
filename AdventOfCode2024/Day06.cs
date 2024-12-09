@@ -33,23 +33,27 @@ public class Day06 : IDay
         return visited.Append((x, y, d)).Select(p => (p.x, p.y)).Distinct().ToList();
     }
 
-    public string SolvePart1(string input)
+    private static (string[] lines, (int x, int y, int d) start) ParseInput(string input)
     {
         var lines = input.Split(Environment.NewLine);
         var index = input.IndexOf('^');
         var len = lines[0].Length + Environment.NewLine.Length;
         var start = (index % len, index / len, 0);
 
+        return (lines, start);
+    }
+
+    public string SolvePart1(string input)
+    {
+        var (lines, start) = ParseInput(input);
+
         return $"{Explore(lines, start).Count}";
     }
 
     public string SolvePart2(string input)
     {
-        var lines = input.Split(Environment.NewLine);
-        var index = input.IndexOf('^');
-        var len = lines[0].Length + Environment.NewLine.Length;
-        var start = (x: index % len, y: index / len, d: 0);
-        
+        var (lines, start) = ParseInput(input);
+
         return $"{Explore(lines, start)[1..]
             .Select(p => lines.Select((l, y) => y == p.y ? l[..p.x] + '#' + l[(p.x + 1)..] : l).ToArray())
             .AsParallel()

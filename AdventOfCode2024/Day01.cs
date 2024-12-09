@@ -14,17 +14,18 @@ public class Day01 : IDay
         { "3   4\r\n4   3\r\n2   5\r\n1   3\r\n3   9\r\n3   3", "31" }
     };
 
+    private static int[][] ParseInput(string input)
+        => input.Split(Environment.NewLine).Select(l => l.Split("   ").Select(int.Parse)).Transpose();
+
     public string SolvePart1(string input)
     {
-        var nums = input.Split(Environment.NewLine).Select(l => l.Split("   ").Select(int.Parse)).Transpose();
-
+        var nums = ParseInput(input);
         return $"{nums[0].Order().Zip(nums[1].Order()).Sum(x => Math.Abs(x.First - x.Second))}";
     }
 
     public string SolvePart2(string input)
     {
-        var nums = input.Split(Environment.NewLine).Select(l => l.Split("   ").Select(int.Parse)).Transpose();
-
+        var nums = ParseInput(input);
         return $"{nums[0].Sum(l => l * nums[1].Count(r => r == l))}";
     }
 }

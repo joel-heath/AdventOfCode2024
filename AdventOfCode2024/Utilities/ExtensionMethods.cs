@@ -2,20 +2,84 @@
 
 public static class ExtensionMethods
 {
-    public static IEnumerable<T> Dump<T>(this IEnumerable<T> input)
-        => input.Dump("\r\n");
+    /// <summary>
+    /// When I should just assign a variable but I really want it to be a one-liner
+    /// Materialises the source, assigns the collection to `output` and returns the collection
+    /// </summary>
+    public static List<T> AssignList<T>(this IEnumerable<T> source, out List<T> output)
+    {
+        var materialised = source.ToList();
+        output = materialised;
+        return materialised;
+    }
 
-    public static IEnumerable<T> Dump<T>(this IEnumerable<T> input, string delimeter)
+    /// <summary>
+    /// When I should just assign a variable but I really want it to be a one-liner
+    /// Materialises the source, assigns the collection to `output` and returns the collection
+    /// </summary>
+    public static T Assign<T>(this T source, out T output)
+    {
+        output = source;
+        return source;
+    }
+
+    /// <summary>
+    /// When I really should've just used a semicolon and started a new line, but I want a one-liner
+    /// Materialises the source to ensure whatever impure function has been written is executed, then 
+    /// </summary>
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "One-liners are funny")]
+    public static TReplace Replace<TSource, TReplace>(this TSource source, TReplace replacement)
+    {
+        return replacement;
+    }
+
+    /// <summary>
+    /// Used like Utils.EnumerateForever(), except this will also return the source collection (materialised ONCE)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static IEnumerable<List<T>> ReturnForever<T>(this IEnumerable<T> source)
+    {
+        var materialised = source.ToList();
+        while (true)
+        {
+            yield return materialised;
+        }
+    }
+    /// <summary>
+    /// Used like Utils.EnumerateForever(), except this is an extension method
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "One-liners are funny")]
+    public static IEnumerable<object> WhileTrue<T>(this IEnumerable<T> source)
+    {
+        object o = new();
+        while (true)
+        {
+            yield return o;
+        }
+    }
+
+
+    public static IEnumerable<T> Dump<T>(this IEnumerable<T> input)
+        => input.Dump(Environment.NewLine);
+
+
+    public static IEnumerable<T> Dump<T>(this IEnumerable<T> input, string delimiter)
     {
         var data = new List<T>();
 
-        Console.Write("[" + delimeter);
+        Console.Write("[" + delimiter);
         foreach (var item in input)
         {
-            Console.Write(item + delimeter);
+            Console.Write(item + delimiter);
             data.Add(item);
         }
-        Console.WriteLine("]" + delimeter);
+        Console.WriteLine("]" + delimiter);
 
         Console.ReadKey();
         return data;
@@ -192,7 +256,7 @@ public static class ExtensionMethods
 
     public static bool InvokeTruthfully(this Action action)
     {
-        action.Invoke();
+        action();
         return true;
     }
 }
