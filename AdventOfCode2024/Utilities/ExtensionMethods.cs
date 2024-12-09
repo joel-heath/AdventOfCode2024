@@ -3,17 +3,21 @@
 public static class ExtensionMethods
 {
     public static IEnumerable<T> Dump<T>(this IEnumerable<T> input)
+        => input.Dump("\r\n");
+
+    public static IEnumerable<T> Dump<T>(this IEnumerable<T> input, string delimeter)
     {
         var data = new List<T>();
 
-        Console.WriteLine("[");
+        Console.Write("[" + delimeter);
         foreach (var item in input)
         {
-            Console.WriteLine(item);
+            Console.Write(item + delimeter);
             data.Add(item);
         }
-        Console.WriteLine("]");
+        Console.WriteLine("]" + delimeter);
 
+        Console.ReadKey();
         return data;
     }
 
