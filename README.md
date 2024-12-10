@@ -33,7 +33,7 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 | [7](AdventOfCode2024/Day07.cs) | 🟣 | Today I am overjoyed as I don't have to make very inefficient, unreadable and unnecessary decisions to force my solution into one line (which I did much of in [2023](https://github.com/joel-heath/AdventOfCode2023/blob/master/AdventOfCode2023/Day20.cs)). My part 2 takes ~~16s~~, ~~5s with parallelisation.~~ 1.5s with parallelisation & memoisation. |
 | [8](AdventOfCode2024/Day08.cs) | 🟣 | I solved today's by grouping the antenna by frequency, taking each pair and calculating the antinode positions. For part 2 I used again `EnumerateForever()`, this time with a `TakeWhile()` to get all antinodes until exiting the map. |
 | [9](AdventOfCode2024/Day09.cs) | 🔵 | I relapsed and wrote another atrocious one-liner. This year, however, I will not stand for impure uses of LINQ, so rather than modifying an external list, I stuck it in the accumulator, creating a new list each time. This truly does demonstrate that my one-liners are both harder to read and slower to execute. This fact will not stop me from writing them though. |
-| [10](AdventOfCode2024/Day10.cs) | ⚫ |  |
+| [10](AdventOfCode2024/Day10.cs) | 🟢 | A very tame day 10, I, like many, managed to accidentally code part 2 while trying to figure out part 1, so as soon as I read it it was a rush to undo. I created a method that returns all reachable 9s, part one runs `.Distinct()`, and part 2 doesn't. |
 | [11](AdventOfCode2024/Day11.cs) | ⚫ |  |
 | [12](AdventOfCode2024/Day12.cs) | ⚫ |  |
 | [13](AdventOfCode2024/Day13.cs) | ⚫ |  |
