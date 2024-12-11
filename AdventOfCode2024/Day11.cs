@@ -11,68 +11,43 @@ public class Day11 : IDay
     public int Day => 11;
     public Dictionary<string, string> UnitTestsP1 => new()
     {
-        { "125 17", "55312" }
+        { "125 17", "55312" },
+        { "0 1 10 99 999", "125681" }
     };
     public Dictionary<string, string> UnitTestsP2 => new()
     {
-        { "125 17", "55312" }
+        { "125 17", "65601038650482" },
+        { "0 1 10 99 999", "149161030616311" }
     };
-
-    public string SolvePart1(string input)
-    {
-        memo = [];
-        var stones = input.Split(' ').Select(long.Parse)
-            .Select(stone => Task.Run(async () => await StoneSorter(stone, 25)))
-            .ToArray();
-
-        Task.WhenAll(stones).Wait();
-
-        return $"{stones.Sum(t => t.Result)}";
-    }
 
     private static ConcurrentDictionary<(long stone, int i), long> memo = [];
 
     private static async Task<long> StoneSorter(long stone, int i)
-    {
-        if (i == 0)
-            return 1;
+    => i == 0
+        ? 1
+        : memo.ContainsKey((stone, i))
+        ? memo[(stone, i)]
+        : memo[(stone, i)] = stone == 0
+            ? await StoneSorter(1, i - 1)
+            : stone.ToString().Assign(out var str).Length % 2 == 0
+            ? (await Task.WhenAll(new string[] { str[..(str.Length / 2)], str[(str.Length / 2)..] }.Select(long.Parse).Select(s => StoneSorter(s, i - 1)))).Sum()
+            : await StoneSorter(stone* 2024, i - 1);
 
-        if (memo.ContainsKey((stone, i)))
-            return memo[(stone, i)];
-
-        long @return;
-        if (stone == 0)
-        {
-            @return = await StoneSorter(1, i - 1);
-        }
-        else if (stone.ToString().Length % 2 == 0)
-        {
-            var str = stone.ToString();
-            string[] halves = [str[..(str.Length / 2)], str[(str.Length / 2)..]];
-            var tasks = halves.Select(long.Parse).Select(s => Task.Run(async () => await StoneSorter(s, i - 1))).ToArray();
-            await Task.WhenAll(tasks);
-
-            @return = tasks.Sum(t => t.Result);
-        }
-        else
-        {
-            @return = await StoneSorter(stone * 2024, i - 1);
-        }
-
-        memo[(stone, i)] = @return;
-        return @return;
-    }
-
-
-    public string SolvePart2(string input)
+    private static string Solve(string input, int blinks)
     {
         memo = [];
-        var stones = input.Split(' ').Select(long.Parse)
-            .Select(stone => Task.Run(async () => await StoneSorter(stone, 75)))
-            .ToArray();
+        return $"{
+            Task.WhenAll(
+                input.Split(' ').Select(long.Parse)
+                    .Select(stone => StoneSorter(stone, blinks))
+                    .ToArray())
+            .Result.Sum()}";
 
-        Task.WhenAll(stones).Wait();
-
-        return $"{stones.Sum(t => t.Result)}";
     }
+
+    public string SolvePart1(string input)
+        => Solve(input, 25);
+
+    public string SolvePart2(string input)
+        => Solve(input, 75);
 }
