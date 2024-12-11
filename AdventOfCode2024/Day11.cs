@@ -18,17 +18,29 @@ public class Day11 : IDay
         { "125 17", "55312" }
     };
 
-    private static ConcurrentDictionary<(long stone, int i), long[]> memo = [];
+    public string SolvePart1(string input)
+    {
+        memo = [];
+        var stones = input.Split(' ').Select(long.Parse)
+            .Select(stone => Task.Run(async () => await StoneSorter(stone, 25)))
+            .ToArray();
 
-    private static async Task<long[]> StoneSorter(long stone, int i)
+        Task.WhenAll(stones).Wait();
+
+        return $"{stones.Sum(t => t.Result)}";
+    }
+
+    private static ConcurrentDictionary<(long stone, int i), long> memo = [];
+
+    private static async Task<long> StoneSorter(long stone, int i)
     {
         if (i == 0)
-            return [stone];
+            return 1;
 
         if (memo.ContainsKey((stone, i)))
             return memo[(stone, i)];
 
-        long[] @return;
+        long @return;
         if (stone == 0)
         {
             @return = await StoneSorter(1, i - 1);
@@ -40,7 +52,7 @@ public class Day11 : IDay
             var tasks = halves.Select(long.Parse).Select(s => Task.Run(async () => await StoneSorter(s, i - 1))).ToArray();
             await Task.WhenAll(tasks);
 
-            @return = tasks.SelectMany(t => t.Result).ToArray();
+            @return = tasks.Sum(t => t.Result);
         }
         else
         {
@@ -51,17 +63,6 @@ public class Day11 : IDay
         return @return;
     }
 
-    public string SolvePart1(string input)
-    {
-        memo = [];
-        var stones = input.Split(' ').Select(long.Parse)
-            .Select(stone => Task.Run(async () => await StoneSorter(stone, 25)))
-            .ToArray();
-
-        Task.WhenAll(stones).Wait();
-
-        return $"{stones.Sum(t => t.Result.Length)}";
-    }
 
     public string SolvePart2(string input)
     {
@@ -72,6 +73,6 @@ public class Day11 : IDay
 
         Task.WhenAll(stones).Wait();
 
-        return $"{stones.Sum(t => t.Result.Length)}";
+        return $"{stones.Sum(t => t.Result)}";
     }
 }
