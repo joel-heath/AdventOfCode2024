@@ -20,20 +20,17 @@ public class Day12 : IDay
         { "RRRRIICCFF\r\nRRRRIICCCF\r\nVVRRRCCFFF\r\nVVRCCCJFFF\r\nVVVVCJJCFE\r\nVVIVCCJJEE\r\nVVIIICJJEE\r\nMIIIIIJJEE\r\nMIIISIJEEE\r\nMMMISSJEEE", "1206" }
     };
 
-    static HashSet<Point> FindArea(Point startingPos, Grid<char> grid)
+    private static HashSet<Point> FindArea(Point startingPos, Grid<char> grid)
     {
         HashSet<Point> visited = [startingPos];
         Queue<Point> queue = new();
         queue.Enqueue(startingPos);
         var cellType = grid[startingPos];
 
-        while (queue.Count > 0)
+        while (queue.TryDequeue(out Point current))
         {
-            var current = queue.Dequeue();
-            foreach (var neighbor in grid.Adjacents(current).Where(n => grid[n] == cellType))
+            foreach (var neighbor in grid.Adjacents(current).Where(n => grid[n] == cellType && !visited.Contains(n)))
             {
-                if (visited.Contains(neighbor))
-                    continue;
                 visited.Add(neighbor);
                 queue.Enqueue(neighbor);
             }
@@ -41,167 +38,67 @@ public class Day12 : IDay
         return visited;
     }
 
-    static int FindPerimeter(HashSet<Point> points, Grid<char> grid)
-    {
-        int count = 0;
-        foreach (var point in points)
-        {
-            foreach (var neighbor in grid.Adjacents(point, contained: false))
-            {
-                if (points.Contains(neighbor))
-                    continue;
-                count++;
-            }
-        }
-        return count;
-    }
+    private static int FindPerimeter(HashSet<Point> points, Grid<char> grid)
+        => points.Sum(point =>
+            grid.Adjacents(point, contained: false)
+                .Count(n => !points.Contains(n)));
 
-    static int FindSides(HashSet<Point> points, Grid<char> grid)
+    private static readonly Point[] vertical = [(0, 0), (1, 0)];
+    private static readonly Point[] horizontal = [(0, 0), (0, 1)];
+
+    private static int FindSides(HashSet<Point> points)
     {
-        HashSet<(Point p, bool d)> verticalLines = [];
-        HashSet<(Point p, bool d)> horizontalLines = [];
-        int count = 0;
-        Point[] vertical = [(0, 0), (1, 0)];
-        Point[] horizontal = [(0, 0), (0, 1)];
+        HashSet<(Point p, bool d)> verticalLines = [];   // d is if the line is on the right side of the point
+        HashSet<(Point p, bool d)> horizontalLines = []; // d is if the line is on the bottom side of the point
+
         foreach (var point in points)
         {
-            foreach (var (neighbor, i) in vertical.Select((v, i) => (point + v, i)))
-            {
-                if (points.Contains(neighbor) && points.Contains(neighbor + (-1, 0)))
-                    continue;
+            foreach (var (neighbor, i) in vertical
+                .Select((v, i) => (n: point + v, i))
+                .Where(d => !points.Contains(d.n) || !points.Contains(d.n + (-1, 0))))
                 verticalLines.Add((neighbor, i == 1));
-            }
-            foreach (var (neighbor, i) in horizontal.Select((v, i) => (point + v, i)))
-            {
-                if (points.Contains(neighbor) && points.Contains(neighbor + (0, -1)))
-                    continue;
+            
+            foreach (var (neighbor, i) in horizontal
+                .Select((v, i) => (n: point + v, i))
+                .Where(d => !points.Contains(d.n) || !points.Contains(d.n + (0, -1))))
                 horizontalLines.Add((neighbor, i == 1));
-            }
         }
-        return ReduceVertical(verticalLines, grid) + ReduceHorizonal(horizontalLines, grid);
+
+        return Reduce(verticalLines
+                .GroupBy(l => (l.d ? 1 : -1) * l.p.X)
+                .Select(g => g.Select(d => d.p).OrderBy(p => p.Y)))
+            + Reduce(horizontalLines
+                .GroupBy(l => (l.d ? 1 : -1) * l.p.Y)
+                .Select(g => g.Select(d => d.p).OrderBy(p => p.X)));
     }
 
-    static int ReduceVertical(HashSet<(Point p, bool d)> points, Grid<char> grid)
+    static int Reduce(IEnumerable<IOrderedEnumerable<Point>> data)
+        => data.Select(row => row.ToList())
+            .Sum(row => row.Aggregate((count: 1, prev: row[0]), (acc, point) =>
+                Math.Abs(point.X - acc.prev.X) + Math.Abs(point.Y - acc.prev.Y) > 1
+                    ? (acc.count + 1, point)
+                    : (acc.count, point)).count);
+
+    private static int Solver(string input, bool discount)
     {
-        var data = points.GroupBy(l => (l.d ? 1 : -1) * l.p.X)
-            .Select(g => g.Select(d => d.p).OrderBy(p => p.Y));
-        var count = 0;
-        foreach (var row in data)
+        int totalPrice = 0;
+        HashSet<Point> seen = [];
+        Grid<char> grid = Grid<char>.FromString(input);
+
+        foreach (var (x, y) in grid.AllPositions().Where(p => !seen.Contains(p)))
         {
-            var line = row.ToList();
-            var prev = line[0];
-            count++;
-
-            if (line.Count > 1)
-            {
-                foreach (var point in line.Skip(1))
-                {
-                    var diff = point - prev;
-
-                    if (Abs(diff) > 1)
-                        count++;
-
-                    prev = point;
-                }
-            }
+            var visited = FindArea((x, y), grid);
+            seen.UnionWith(visited);
+            totalPrice += visited.Count * (discount ? FindSides(visited) : FindPerimeter(visited, grid));
         }
 
-        return count;
+        return totalPrice;
     }
-
-    static int ReduceHorizonal(HashSet<(Point p, bool d)> points, Grid<char> grid)
-    {
-        var data = points.GroupBy(l => (l.d ? 1 : -1) * l.p.Y)
-            .Select(g => g.Select(d => d.p).OrderBy(p => p.X));
-        var count = 0;
-        foreach (var row in data)
-        {
-            var line = row.ToList();
-            var prev = line[0];
-            count++;
-
-            if (line.Count > 1)
-            {
-                foreach (var point in line.Skip(1))
-                {
-                    var diff = point - prev;
-
-                    if (Abs(diff) > 1)
-                        count++;
-
-                    prev = point;
-                }
-            }
-        }
-
-        return count;
-    }
-
-    static long Abs(Point point) => Math.Abs(point.X) + Math.Abs(point.Y);
 
     public string SolvePart1(string input)
-    {
-        long totalPrice = 0;
-
-        List<HashSet<Point>> regions = [];
-        Dictionary<Point, int> regionMap = [];
-
-        Grid<char> grid = Grid<char>.FromString(input);
-        for (int y = 0; y < grid.Height; y++)
-        {
-            for (int x = 0; x < grid.Width; x++)
-            {
-                if (regionMap.ContainsKey((x, y)))
-                    continue;
-
-                var cell = grid[x, y];
-                var visited = FindArea((x, y), grid);
-                foreach (var point in visited)
-                {
-                    regionMap[point] = regions.Count;
-                }
-                regions.Add(visited);
-
-                int area = visited.Count;
-                int permimeter = FindPerimeter(visited, grid);
-
-                totalPrice += area * permimeter;
-            }
-        }
-
-        return $"{totalPrice}";
-    }
+        => $"{Solver(input, false)}";
 
     public string SolvePart2(string input)
-    {
-        long totalPrice = 0;
+        => $"{Solver(input, true)}";
 
-        List<HashSet<Point>> regions = [];
-        Dictionary<Point, int> regionMap = [];
-
-        Grid<char> grid = Grid<char>.FromString(input);
-        for (int y = 0; y < grid.Height; y++)
-        {
-            for (int x = 0; x < grid.Width; x++)
-            {
-                if (regionMap.ContainsKey((x, y)))
-                    continue;
-
-                var cell = grid[x, y];
-                var visited = FindArea((x, y), grid);
-                foreach (var point in visited)
-                {
-                    regionMap[point] = regions.Count;
-                }
-                regions.Add(visited);
-
-                int area = visited.Count;
-                int sides = FindSides(visited, grid);
-
-                totalPrice += area * sides;
-            }
-        }
-
-        return $"{totalPrice}";
-    }
 }
