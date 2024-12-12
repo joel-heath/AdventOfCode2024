@@ -56,10 +56,10 @@ public class Grid<T>(int x, int y)
     public static readonly IEnumerable<Point> CardinalVectors = [(0, -1), (1, 0), (0, 1), (-1, 0)];
     public static readonly IEnumerable<Point> DiagonalVectors = [(1, -1), (1, 1), (-1, 1), (-1, -1)];
 
-    public IEnumerable<Point> Adjacents(Point p, bool includeDiagonals = false)
+    public IEnumerable<Point> Adjacents(Point p, bool includeDiagonals = false, bool contained = true)
     {
         var neighbours = includeDiagonals ? CardinalVectors.Concat(DiagonalVectors) : CardinalVectors;
-        return neighbours.Select(n => p + n).Where(Contains);
+        return contained ? neighbours.Select(n => p + n).Where(Contains) : neighbours.Select(n => p + n);
     }
 
     public IEnumerable<Point> AllPositions()

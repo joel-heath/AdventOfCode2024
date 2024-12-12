@@ -34,7 +34,7 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 | [8](AdventOfCode2024/Day08.cs) | 🟣 | I solved today's by grouping the antenna by frequency, taking each pair and calculating the antinode positions. For part 2 I used again `EnumerateForever()`, this time with a `TakeWhile()` to get all antinodes until exiting the map. |
 | [9](AdventOfCode2024/Day09.cs) | 🔵 | I relapsed and wrote another atrocious one-liner. This year, however, I will not stand for impure uses of LINQ, so rather than modifying an external list, I stuck it in the accumulator, creating a new list each time. This truly does demonstrate that my one-liners are both harder to read and slower to execute. This fact will not stop me from writing them though. |
 | [10](AdventOfCode2024/Day10.cs) | 🟢 | A very tame day 10, I, like many, managed to accidentally code part 2 while trying to figure out part 1, so as soon as I read it it was a rush to undo. I created a method that returns all reachable 9s, part one runs `.Distinct()`, and part 2 doesn't. |
-| [11](AdventOfCode2024/Day11.cs) | 🟢 | Memoisation and parallelisation were enough to get part 2 under a 250ms, though I initially implemented them storing the whole stones array. My computer came screeching to a halt at 120GB of RAM usage, and I realised I could just stone the length. |
+| [11](AdventOfCode2024/Day11.cs) | 🟢 | Memoisation is enough to get part 2 in 50ms, though I initially implemented them storing the whole stones array. My computer came screeching to a halt at 120GB of RAM usage, and I realised I could just stone the length. |
 | [12](AdventOfCode2024/Day12.cs) | ⚫ |  |
 | [13](AdventOfCode2024/Day13.cs) | ⚫ |  |
 | [14](AdventOfCode2024/Day14.cs) | ⚫ |  |
