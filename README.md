@@ -36,7 +36,7 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 | [10](AdventOfCode2024/Day10.cs) | 🟢 | A very tame day 10, I, like many, managed to accidentally code part 2 while trying to figure out part 1, so as soon as I read it it was a rush to undo. I created a method that returns all reachable 9s, part one runs `.Distinct()`, and part 2 doesn't. |
 | [11](AdventOfCode2024/Day11.cs) | 🟢 | Memoisation is enough to get part 2 in 50ms, though I initially implemented them storing the whole stones array. My computer came screeching to a halt at 120GB of RAM usage, and I realised I could just stone the length. |
 | [12](AdventOfCode2024/Day12.cs) | 🟡 | Today, I used flood-fill for areas, counted all neighbours of points that are outside the specified points for the perimeter, and for the sides I accumulated all the vertical and horizontal sides into lists, then counted only the ones that differed from the previous by >1 to determine if they were continuous. |
-| [13](AdventOfCode2024/Day13.cs) | ⚫ |  |
+| [13](AdventOfCode2024/Day13.cs) | 🟣 | I determined the number of button presses by solving the system of linear equations using their matrix equation, the only thing left to do is test if the results are integers. |
 | [14](AdventOfCode2024/Day14.cs) | ⚫ |  |
 | [15](AdventOfCode2024/Day15.cs) | ⚫ |  |
 | [16](AdventOfCode2024/Day16.cs) | ⚫ |  |
