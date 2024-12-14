@@ -3,6 +3,7 @@ using System.Reflection;
 using TextCopy;
 using AdventOfCode2024.Utilities;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AdventOfCode2024;
 
@@ -104,24 +105,30 @@ internal class Program
 
         var tests = (part == 1) ? day.UnitTestsP1 : day.UnitTestsP2;
 
-        foreach (string testI in tests.Keys)
+        if (tests.Count == 0)
+        {
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("No unit tests available");
+            return;
+        }
+
+        foreach (var test in tests)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            // Console.WriteLine($"Input: {testI}");
+            // Console.WriteLine($"Input: {test.Key}");
             Console.Write($"Output: ");
 
-            var testINormalised = testI.ReplaceLineEndings();
+            string input = test.Key.ReplaceLineEndings();
+            string output = (part == 1) ? day.SolvePart1(input) : day.SolvePart2(input);
 
-            string testO = (part == 1) ? day.SolvePart1(testINormalised) : day.SolvePart2(testINormalised);
-
-            if (testO.Contains(Environment.NewLine))
+            if (output.Contains(Environment.NewLine))
             {
                 Console.WriteLine();
             }
-            Console.WriteLine(testO);
+            Console.WriteLine(output);
 
 
-            if (testO == tests[testI])
+            if (output == test.Value)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Success!");
@@ -131,7 +138,7 @@ internal class Program
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Failure!");
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"Expected Output: {tests[testINormalised]}");
+                Console.WriteLine($"Expected Output: {tests[input]}");
             }
         }
     }
