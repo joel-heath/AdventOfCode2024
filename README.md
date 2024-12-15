@@ -18,8 +18,8 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 🔵 A one-liner that uses my weird Extension Methods and is probably pretty unreadable, hopefully comes with a normal solution as well. \
 🟢 A couple variable initialisations, perhaps a function, and a one-liner return. \
 🟡 Short, succinct code. \
-🟠 Average solution with some code unreduced. \
-🔴 A disgusting, verbose, inefficient, revolting imperative solution. \
+🟠 An average, mostly imperative solution. \
+🔴 An inefficient / heuristic-based solution (in my opinion heuristics are cop-outs). \
 ⚫ Unsolved (probably because the problem isn't out yet, or I forgot to push).
 
 | **Day** | **Verbosity** | **Notes** |
@@ -38,7 +38,7 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 | [12](AdventOfCode2024/Day12.cs) | 🟡 | Today, I used flood-fill for areas, counted all neighbours of points that are outside the specified points for the perimeter, and for the sides I accumulated all the vertical and horizontal sides into lists, then counted only the ones that differed from the previous by >1 to determine if they were continuous. |
 | [13](AdventOfCode2024/Day13.cs) | 🟣 | I determined the number of button presses by solving the system of linear equations using their matrix equation (Cramer's rule), the only thing left to do is test if the results are integers. |
 | [14](AdventOfCode2024/Day14.cs) | 🟢 | Today's was... weird. Initially I thought the 'tree' would be the one we've seen on the advent calendar, then I thought it was any NxM tree in the AoC style. Eventually I thought to check for when the robots don't overlap, which has NO RIGHT IN BEING THE CORRECT SOLUTION. I hear minimising the safety factor also works but I'm not swapping out one illogical solution for another. |
-| [15](AdventOfCode2024/Day15.cs) | ⚫ |  |
+| [15](AdventOfCode2024/Day15.cs) | 🟠 | Today's part 2 seemed so innocent at first then slowly revealed it's true colours after many fails at the test input. My approach for part 2 was to recur my block moving function, at the leaf nodes returning true and causing all the blocks to be moved. Unfortunately that means one branch won't know if another hit a wall and the blocks will be already moved, so I created a copy of the blocks collection, then discarded it if the top-level call returned false. |
 | [16](AdventOfCode2024/Day16.cs) | ⚫ |  |
 | [17](AdventOfCode2024/Day17.cs) | ⚫ |  |
 | [18](AdventOfCode2024/Day18.cs) | ⚫ |  |
