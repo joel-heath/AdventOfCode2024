@@ -60,137 +60,75 @@ public class Day15 : IDay
             .Sum(p => 100 * p.Y + p.X)}";
     }
 
-    /*
-    private static bool MoveBox2(Point box, Point vect, List<Point> boxes, Point[] walls)
+    // moves itself and all others onward, returning whether it moved, indicating that `point` is empty and can be moved to
+    private static bool MoveBoxes(Point left, Point dir, List<Point> boxes, Point[] walls)
     {
-        if (vect.Y == 0 && boxes.Contains(box + vect))
-            return MoveBox2(box + vect, vect, boxes, walls);
-
-        var left = box + vect;
-        var right = left + (1, 0);
-
-        //bool canMove = !walls.Contains(left) && !walls.Contains(right)
-        ////  if going left, `right` will be ourself, so no need to check for wall blocking on the right
-        //    && (!boxes.Contains(left) && (right == box || !boxes.Contains(right))
-        //    || MoveBox2(left, vect, boxes, walls));
-        bool canMove = !walls.Contains(left) && !walls.Contains(right);
-        if (canMove)
-        {
-            var temp = !boxes.Contains(left) && !boxes.Contains(right);
-            if (!temp)
-            {
-                temp = MoveBox2(left, vect, boxes, walls);
-            }
-            canMove = temp;
-        }
-
-        if (canMove)
-        {
-            boxes.Remove(box);
-            boxes.Add(left);
-        }
-        return canMove;
-    }*/
-
-    private static bool MoveBox2(Point box, Point vect, List<Point> boxes, Point[] walls)
-    {
-        if (vect.Y == 0 && boxes.Contains(box + vect))
-            return MoveBox2(box + vect, vect, boxes, walls);
-
-        if (!walls.Contains(box) && !walls.Contains(box + (1, 0)) && !boxes.Contains(box) && (vect.X == -1 || !boxes.Contains(box + (1, 0))))
-        {
-            boxes.Add(box);
-            return true;
-        }
-
         bool canMove;
-        var left = box + vect;
         var right = left + (1, 0);
-        if (vect.Y == 0)
+        var newLeft = left + dir;
+        var newRight = right + dir;
+
+        if (walls.Contains(newLeft) || walls.Contains(newRight))
+            return false;
+
+        // if this space is empty we can move there:
+        // For vertical movement that means checking new left, new left - 1, new left + 1 (new right)
+        // For left movement we DO NOT check new left + 1, because that's where we came from
+        // For right movement we DO NOT check new left - 1, because that's where we came from
+        if (!boxes.Contains(newLeft)
+            && (dir.X == 0 ? !boxes.Contains(newRight) && !boxes.Contains(newLeft + (-1, 0)) :
+                  dir.X < 0 &&    !boxes.Contains(newLeft + (-1, 0))
+            || /* dir.X > 0 && */ !boxes.Contains(newRight)))
+            canMove = true;
+
+        // going horizontal is trivial as boxes have height 1
+        // we go in steps of 2 to skip the right sides. .[][].. -> ...[][]
+        // but if theres empty space we only go 1 step  .[].... -> ..[]...
+        else if (dir.X != 0)
         {
-            canMove = !walls.Contains(left) && !walls.Contains(right)
-                && (!boxes.Contains(left) && !boxes.Contains(right)
-                || MoveBox2(left, vect, boxes, walls));
+            var doubleStep = newLeft + dir;
+            if (boxes.Contains(doubleStep))
+                canMove = MoveBoxes(doubleStep, dir, boxes, walls);
+            else
+                canMove = MoveBoxes(newLeft, dir, boxes, walls);
         }
+
+        // going vertical is anything but trivial
         else
         {
-            canMove = !walls.Contains(left) && !walls.Contains(right)
-                && (!boxes.Contains(left) && !boxes.Contains(right)
-                || (MoveBox2(left, vect, boxes, walls) && MoveBox2(right, vect, boxes, walls)));
-        }
+            // first check for the trivial case, the boxes are aligned vertically
+            // []
+            // []
 
+            if (boxes.Contains(newLeft))
+                canMove = MoveBoxes(newLeft, dir, boxes, walls);
+            else
+            {
+                // the harder case: boxes are offset
+                // 1     2     3
+                // []    []   [][]
+                //  []  []     []
+
+                // 1 (and 3)
+                canMove = true;
+                if (boxes.Contains(newLeft + (-1, 0)))
+                    canMove &= MoveBoxes(newLeft + (-1, 0), dir, boxes, walls);
+                // 2 (and 3)
+                if (boxes.Contains(newRight))
+                    canMove &= MoveBoxes(newRight, dir, boxes, walls);
+            }
+        }
 
         if (canMove)
         {
-            boxes.Remove(box);
-            boxes.Add(left);
+            boxes.Remove(left);
+            boxes.Add(newLeft);
         }
         return canMove;
     }
 
-    /*
-    private static bool MoveBox2(Grid<char> map, Point box, Point vect)
-    {
-        var newPos = box + vect;
-        bool canMove = (map[newPos] == '.' && map[newPos + (1, 0)] != '.')
-            || (map[newPos] != '#' && map[newPos + (1, 0)] != '#'
-            && MoveBox2(map, newPos, vect));
-
-        if (canMove)
-        {
-            map[box] = '.';
-            map[box + (1, 0)] = '.';
-            map[newPos] = '[';
-            map[newPos + (1, 0)] = ']';
-        }
-        return canMove;
-    }*/
-
     public string SolvePart2(string input)
     {
-        /*
-        var data = input.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        var map = Grid<char>.FromString(string.Join(Environment.NewLine,
-                    data[0].Split(Environment.NewLine).Select(line => string.Concat(line.Select(c => $"{(c == 'O' ? '[' : c)}{(c == '@' ? '.' : c == 'O' ? ']' : c)}"))))); var instructions = string.Concat(data[1].Split(Environment.NewLine));
-        var player = map.AllPositions().Where(p => map[p] == '@').First();
-        map[player] = '.';
-
-        for (int i = 0; i < instructions.Length; i++)
-        {
-            var instruction = instructions[i];
-            var vect = vectors[Array.IndexOf(directions, instruction)];
-            var newPos = player + vect;
-
-            if (map[newPos] != '#')
-            {
-                var left = map[newPos] == '[';
-                var right = map[newPos] == ']';
-                if (map[newPos] == '.' || MoveBox2(map, left ? newPos : newPos + (-1, 0), vect))
-                    player = newPos;
-            }
-
-            Console.SetCursorPosition(0, 0);
-            for (int r = 0; r < map.Height; r++)
-            {
-                for (int c = 0; c < map.Width; c++)
-                {
-                    if (player == (c, r))
-                        Console.Write('@');
-                    else
-                        Console.Write(map[(c, r)]);
-                }
-                Console.WriteLine();
-            }
-            Console.ReadKey();
-            
-        }
-
-        return $"{map.AllPositions()
-            .Where(p => map[p] == '[')
-            .Sum(p => 100 * p.Y + p.X)}";
-        */
-
-        
         var data = input.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
         
         var map = Grid<char>.FromString(string.Join(Environment.NewLine,
@@ -203,6 +141,36 @@ public class Day15 : IDay
         var boxes = map.AllPositions().Where(p => map[p] == '[').ToList();
         Point[] walls = map.AllPositions().Where(p => map[p] == '#').ToArray();
 
+        //PrintMap(map, player, boxes, walls);
+        for (int i = 0; i < instructions.Length; i++)
+        {
+            var instruction = instructions[i];
+            var vect = vectors[Array.IndexOf(directions, instruction)];
+            var newPos = player + vect;
+
+            if (!walls.Contains(newPos))
+            {
+                var newBoxes = boxes.ToList();
+
+                var left = boxes.Contains(newPos);
+                var right = boxes.Contains(newPos + (-1, 0));
+                if (!left && !right)
+                    player = newPos;
+                else if (MoveBoxes(left ? newPos : newPos + (-1, 0), vect, newBoxes, walls))
+                {
+                    player = newPos;
+                    boxes = newBoxes;
+                }
+            }
+
+            //PrintMap(map, player, boxes, walls);
+        }
+        //PrintMap(map, player, boxes, walls);
+        return $"{boxes.Sum(p => 100 * p.Y + p.X)}";
+    }
+
+    private static void PrintMap(Grid<char> map, Point player, List<Point> boxes, Point[] walls)
+    {
         Console.SetCursorPosition(0, 0);
         for (int r = 0; r < map.Height; r++)
         {
@@ -216,38 +184,5 @@ public class Day15 : IDay
             Console.WriteLine();
         }
         Console.ReadKey();
-        for (int i = 0; i < instructions.Length; i++)
-        {
-            var instruction = instructions[i];
-            var vect = vectors[Array.IndexOf(directions, instruction)];
-            var newPos = player + vect;
-
-            if (!walls.Contains(newPos))
-            {
-                var left = boxes.Contains(newPos);
-                var right = boxes.Contains(newPos + (-1, 0));
-                if (!left && !right)
-                    player = newPos;
-                //else if (MoveBox2(left ? newPos : newPos + (-1, 0), vect, boxes, walls))
-                else if (MoveBox2(newPos, vect, boxes, walls))
-                    player = newPos;
-            }
-
-            Console.SetCursorPosition(0, 0);
-            for (int r = 0; r < map.Height; r++)
-            {
-                for (int c = 0; c < map.Width; c++)
-                {
-                    Console.Write(player == (c, r) ? '@'
-                        : walls.Contains((c, r)) ? '#'
-                        : boxes.Contains((c, r)) ? '['
-                        : boxes.Contains((c - 1, r)) ? ']' : '.');
-                }
-                Console.WriteLine();
-            }
-            Console.ReadKey();
-        }
-
-        return $"{boxes.Sum(p => 100 * p.Y + p.X)}";
     }
 }
