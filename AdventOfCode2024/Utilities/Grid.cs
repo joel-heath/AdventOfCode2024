@@ -216,7 +216,7 @@ public struct Point(long x, long y)
     public static Point operator *(long scalar, Point point) => new(scalar * point.X, scalar * point.Y);
     public static Point operator +(Point a, Point b) => new(a.X + b.X, a.Y + b.Y);
     public static Point operator -(Point a, Point b) => new(a.X - b.X, a.Y - b.Y);
-    public static Point operator -(Point a) => new(-a.X, a.Y);
+    public static Point operator -(Point a) => new(-a.X, -a.Y);
     public static bool operator ==(Point? a, Point? b) => a.Equals(b);
     public static bool operator !=(Point? a, Point? b) => !(a == b);
 
@@ -246,7 +246,7 @@ public struct Coord(long x, long y, long z)
     static IEnumerable<IEnumerable<T>> GetPermutationsWithRept<T>(IEnumerable<T> list, int length)
     {
         if (length == 1) return list.Select(t => new T[] { t });
-        return GetPermutationsWithRept(list, length - 1).SelectMany(t => list, (t1, t2) => t1.Concat(new T[] { t2 }));
+        return GetPermutationsWithRept(list, length - 1).SelectMany(t => list, (t1, t2) => t1.Concat([t2]));
     }
 
     public readonly Coord[] Adjacents() => [this + (0, 0, 1), this - (0, 0, 1), this + (0, 1, 0), this - (0, 1, 0), this + (1, 0, 0), this - (1, 0, 0)];
