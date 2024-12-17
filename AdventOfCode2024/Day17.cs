@@ -18,7 +18,7 @@ public class Day17 : IDay
     {
         if (operand <= 3) return operand;
         if (operand <= 6) return registers[operand - 4];
-        throw new Exception("Invalid combo operand");
+        throw new ArgumentException("Invalid combo operand, must be (0–8)");
     }
 
     public string SolvePart1(string input)
@@ -68,9 +68,9 @@ public class Day17 : IDay
     public string SolvePart2(string input)
     {
         var output = Utils.GetInts(input.Split(Environment.NewLine + Environment.NewLine)[1]);
-        if (UnitTestsP2.ContainsKey(input)) return $"{output.Select((n, i) => n << (3 * (i+1))).Sum()}";
-
-        return $"{CalculateInput([..output.Reverse()]).Min()}";
+        return UnitTestsP2.ContainsKey(input)
+            ? $"{output.Select((n, i) => n << (3 * (i+1))).Sum()}"
+            : $"{CalculateInput([..output.Reverse()]).Min()}";
     }
 
     static IEnumerable<long> CalculateInput(int[] outputs, int index = 0, long A = 0)
@@ -78,9 +78,9 @@ public class Day17 : IDay
         if (index == outputs.Length) return [A];
         long n = outputs[index];
         List<long> options = [];
-        for (int c = 0; c < 8; c++)
+        for (byte c = 0; c < 8; c++)
         {
-            long a = A << 3 | c;
+            long a = (A << 3) | c;
             long b = c ^ (a >> (c ^ 7));
 
             if (b % 8 == n)
