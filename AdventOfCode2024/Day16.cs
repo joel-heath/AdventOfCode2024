@@ -32,28 +32,21 @@ public class Day16 : IDay
     {
         var queue = new PriorityQueue<(Point pos, Point dir), int>();
         queue.Enqueue((start, (1, 0)), 0);
-        int bestSoFar = int.MaxValue;
         HashSet <(Point pos, Point dir)> visited = [];
+        int bestSoFar = int.MaxValue;
         while (queue.TryDequeue(out var data, out int steps))
         {
             var (current, dir) = data;
             if (steps >= bestSoFar)
                 continue;
             if (current == end)
-            {
-                if (steps < bestSoFar)
-                    bestSoFar = steps;
-            }
+                bestSoFar = steps;
             if (visited.Contains((current, dir)))
                 continue;
 
             visited.Add((current, dir));
-
-            foreach (var (next, newDir) in Adjacents(current, dir).Where(n => map[n.p] != '#'))
-            {
-                var cost = dir == newDir ? steps + 1 : steps + 1000 + 1;
-                queue.Enqueue((next, newDir), cost);
-            }
+            queue.EnqueueRange(Adjacents(current, dir).Where(n => map[n.p] != '#')
+                .Select(n => ((n.p, n.dir), dir == n.dir ? steps + 1 : steps + 1000 + 1)));
         }
         return bestSoFar;
     }
@@ -62,9 +55,9 @@ public class Day16 : IDay
     {
         var queue = new PriorityQueue<(Point pos, Point dir, HashSet<Point> history), int>();
         queue.Enqueue((start, (1, 0), []), 0);
-        int bestSoFar = int.MaxValue;
         Dictionary<(Point pos, Point dir), int> visited = [];
         HashSet<Point> bestPath = [];
+        int bestSoFar = int.MaxValue;
         while (queue.TryDequeue(out var data, out int steps))
         {
             var (current, dir, history) = data;
@@ -73,9 +66,7 @@ public class Day16 : IDay
             if (current == end)
             {
                 if (steps == bestSoFar)
-                {
                     bestPath.UnionWith(history);
-                }
                 else
                 {
                     bestPath = [..history];
@@ -83,21 +74,15 @@ public class Day16 : IDay
                 }
                 continue;
             }
-            if (visited.TryGetValue((current, dir), out int existingSteps))
-            {
-                if (steps > existingSteps)
-                    continue;
-            }
+            if (visited.TryGetValue((current, dir), out int existingSteps) && steps > existingSteps)
+                continue;
 
             visited.TryAdd((current, dir), steps);
             history = [.. history];
             history.Add(current);
 
-            foreach (var (next, newDir) in Adjacents(current, dir).Where(n => !history.Contains(n.p) && map[n.p] != '#'))
-            {
-                var cost = dir == newDir ? steps + 1 : steps + 1000 + 1;
-                queue.Enqueue((next, newDir, history), cost);
-            }
+            queue.EnqueueRange(Adjacents(current, dir).Where(n => !history.Contains(n.p) && map[n.p] != '#')
+                 .Select(n => ((n.p, n.dir, history), dir == n.dir ? steps + 1 : steps + 1000 + 1)));
         }
 
         bestPath.Add(end);

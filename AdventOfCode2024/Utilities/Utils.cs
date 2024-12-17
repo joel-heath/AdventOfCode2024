@@ -129,6 +129,9 @@ public static partial class Utils
 
     public static IEnumerable<long> GetLongs(string input)
         => Integer().Matches(input).Select(M => long.Parse(M.Value));
+    public static IEnumerable<int> GetInts(string input)
+        => Integer().Matches(input).Select(M => int.Parse(M.Value));
+
 
     [GeneratedRegex(@"-?\d+")]
     private static partial Regex Integer();
