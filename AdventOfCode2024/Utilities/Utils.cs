@@ -4,6 +4,22 @@ namespace AdventOfCode2024.Utilities;
 
 public static partial class Utils
 {
+    /// Return true for a given midpoint if the target is to the right or equal to the midpoint (leftBound = midpoint), false if it's to the left.</param>
+    public static int BinarySearch(int rightStart, Func<int, bool> midHandler, int leftStart = 0)
+    {
+        int left = leftStart;
+        int right = rightStart;
+        while (left != right)
+        {
+            int mid = (left + right + 1) / 2;
+            if (midHandler(mid))
+                left = mid;
+            else
+                right = mid - 1;
+        }
+        return left;
+    }
+
     /// <summary>
     /// Standard modulo doesn't exhibit expected behaviour for looping and wrapping indices (-1 % 5 != 4).
     /// </summary>

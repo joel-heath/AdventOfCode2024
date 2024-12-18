@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 
 namespace AdventOfCode2024.Utilities;
 
@@ -232,6 +233,27 @@ public struct Point(long x, long y)
     {
         x = X;
         y = Y;
+    }
+
+    public readonly bool Contained(int width, int height)
+        => X >= 0 && Y >= 0 && X < width && Y < height;
+
+    public readonly bool Contained(int width)
+        => Contained(width, width);
+
+    public static readonly IEnumerable<Point> CardinalVectors = [(0, -1), (1, 0), (0, 1), (-1, 0)];
+    public static readonly IEnumerable<Point> DiagonalVectors = [(1, -1), (1, 1), (-1, 1), (-1, -1)];
+
+    public IEnumerable<Point> Adjacents(bool includeDiagonals = false, int width = -1, int height = -1)
+    {
+        Point here = (X, Y);
+        var vectors = includeDiagonals ? CardinalVectors.Concat(DiagonalVectors) : CardinalVectors;
+        var neighbours = vectors.Select(n => here + n);
+        return width > 0
+            ? height > 0
+                ? neighbours.Where(p => p.Contained(width, height))
+                : neighbours.Where(p => p.Contained(width))
+            : neighbours;
     }
 }
 
