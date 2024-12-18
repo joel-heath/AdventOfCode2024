@@ -1,5 +1,4 @@
 using AdventOfCode2024.Utilities;
-using System.Linq;
 
 namespace AdventOfCode2024;
 

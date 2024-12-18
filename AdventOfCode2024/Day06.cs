@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace AdventOfCode2024;
 
 public class Day06 : IDay
