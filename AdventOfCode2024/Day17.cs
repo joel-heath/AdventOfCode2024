@@ -7,11 +7,11 @@ public class Day17 : IDay
     public int Day => 17;
     public Dictionary<string, string> UnitTestsP1 => new()
     {
-        { "Register A: 729\r\nRegister B: 0\r\nRegister C: 0\r\n\r\nProgram: 0,1,5,4,3,0", "4,6,3,5,6,3,5,2,1,0" },
+        { "Register A: 729\r\nRegister B: 0\r\nRegister C: 0\r\n\r\nProgram: 0,1,5,4,3,0", "4,6,3,5,6,3,5,2,1,0" }
     };
     public Dictionary<string, string> UnitTestsP2 => new()
     {
-        { "Register A: 2024\r\nRegister B: 0\r\nRegister C: 0\r\n\r\nProgram: 0,3,5,4,3,0", "117440" },
+        { "Register A: 2024\r\nRegister B: 0\r\nRegister C: 0\r\n\r\nProgram: 0,3,5,4,3,0", "117440" }
     };
 
     private static long ComboOp(int operand, List<long> registers)
