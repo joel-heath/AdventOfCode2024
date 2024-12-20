@@ -46,30 +46,18 @@ public class Day20 : IDay
         var map = Grid<char>.FromString(input);
         var start = map.AllPositions().First(p => map[p] == 'S');
         var end = map.AllPositions().First(p => map[p] == 'E');
+
         var startDistances = Dijkstras(map, start);
         var endDistances = Dijkstras(map, end);
-        var normLength = endDistances[start];
-        var targetLength = normLength - (UnitTestsP1.ContainsKey(input) ? testThreshold : 100);
 
-        int count = 0;
-        foreach (var pos in map.AllPositions()
-            .Where(p => map[p] != '#'))
-        {
-            var candidates = Radius(radius)
+        var targetLength = endDistances[start] - (UnitTestsP1.ContainsKey(input) ? testThreshold : 100);
+
+        return map.AllPositions()
+            .Where(p => map[p] != '#')
+            .Sum(pos => Radius(radius)
                 .Select(p => p + pos)
-                .Where(p => p != pos)
-                .Where(map.Contains)
-                .Where(p => map[p] != '#');
-
-            foreach (var cand in candidates)
-            {
-                var dist = startDistances[pos] + pos.MDistanceTo(cand) + endDistances[cand];
-                if (dist <= targetLength)
-                    count++;
-            }
-        }
-
-        return count;
+                .Where(p => p != pos && map.Contains(p) && map[p] != '#')
+                .Count(c => startDistances[pos] + pos.MDistanceTo(c) + endDistances[c] <= targetLength));
     }
 
     public string SolvePart1(string input)
