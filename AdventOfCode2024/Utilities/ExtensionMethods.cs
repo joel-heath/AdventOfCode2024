@@ -2,6 +2,28 @@
 
 public static class ExtensionMethods
 {
+    public static Point Sum(this IEnumerable<Point> source)
+    {
+        long x = 0, y = 0;
+        foreach (var point in source)
+        {
+            x += point.X;
+            y += point.Y;
+        }
+        return (x, y);
+    }
+
+    public static Point Sum<T>(this IEnumerable<T> source, Func<T, Point> selector)
+    {
+        long x = 0, y = 0;
+        foreach (var point in source.Select(selector))
+        {
+            x += point.X;
+            y += point.Y;
+        }
+        return (x, y);
+    }
+
     /// <summary>
     /// When I should just assign a variable but I really want it to be a one-liner
     /// Materialises the source, assigns the collection to `output` and returns the collection

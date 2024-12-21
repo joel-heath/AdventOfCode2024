@@ -141,6 +141,8 @@ internal class Program
                 Console.WriteLine($"Expected Output: {tests[input]}");
             }
         }
+
+        Console.WriteLine();
     }
 
     static async Task Main(string[] args)
@@ -163,30 +165,14 @@ internal class Program
             ? (int.TryParse(args[1].Trim(' '), out part) && (part == 1 || part == 2)) ? part : throw new ArgumentNullException(nameof(args), "Invalid part [1,2]")
             : PromptPart();
         runTests = args.Length >= 3
-            && args[2] == "1"
-            || PromptTests();
+            ? args[2] == "1"
+            : PromptTests();
 
         if (runTests)
             UnitTests(day, part);
 
-        /*
-        if (args.Length == 3)
-        {
-            day = IDay.TryGetDay((args[0].Length == 1 ? "0" : "") + args[0]) ?? throw new ArgumentNullException(nameof(args), "Invalid day [1,25]");
-            if (!int.TryParse(args[1].Trim(' '), out part) || !(part == 1 || part == 2)) { throw new ArgumentNullException(nameof(args), "Invalid part [1,2]"); }
-            if (args[2] == "1") { UnitTests(day, part); }
-        }
-        else
-        {
-            day = GetUserDay();
-            Console.Write("Solve for part 1 or 2? ");
-            part = BinaryChoice('1', '2') ? 1 : 2;
-            Console.Write("Run test inputs? ");
-            if (BinaryChoice('Y', 'N')) { Console.WriteLine(); UnitTests(day, part); }
-        }*/
-
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"{Environment.NewLine}Day {day.Day} Part {part}");
+        Console.WriteLine($"Day {day.Day} Part {part}");
 
         var inputPath = Path.Combine(startUpPath, @$"Inputs\Day{day.Day}.txt");
         string input;
