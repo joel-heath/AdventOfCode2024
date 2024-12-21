@@ -15,10 +15,11 @@ public class Day07 : IDay
     };
 
     private static readonly Dictionary<(string[] opset, int k), string[][]> memo = [];
-    
+    private static readonly Lock memoLock = new();
+
     private static string[][] MemoisedMultichoose(string[] operators, int k)
     {
-        lock (memo)
+        lock (memoLock)
         {
             return memo.TryGetValue((operators, k), out string[][]? value) ? value
                 : memo[(operators, k)] = operators.Multichoose(k).Select(x => x.ToArray()).ToArray();

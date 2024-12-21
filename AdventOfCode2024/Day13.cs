@@ -42,5 +42,5 @@ public partial class Day13 : IDay
         => $"{Solve(input, 0)}";
 
     public string SolvePart2(string input)
-        => $"{Solve(input, 10000000000000)}";
+        => $"{Solve(input, 10_000_000_000_000)}";
 }

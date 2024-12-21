@@ -17,9 +17,9 @@ public class Day05 : IDay
     private static bool ValidateOrder(Dictionary<long, HashSet<long>> orders, long[] line)
         => !line.Select(
                 (curr, i) => line[..i].Select(
-                    (pre, j) => (orders.TryGetValue(curr, out var successors) ? successors : []).Contains(pre) ? (line[i], line[j]) = (line[j], line[i]) : (-1, -1)
-                ).Any(i => i != (-1, -1))
-            ).Any(b => b);
+                    (pre, j) => (orders.TryGetValue(curr, out var successors) ? successors : []).Contains(pre) ? (line[i], line[j]) = (line[j], line[i]) : (-1, -1))
+                .Any(i => i != (-1, -1)))
+            .Any(b => b);
 
     private static (Dictionary<long, HashSet<long>> orderingRules, IEnumerable<long[]> updates) ParseInput(string input)
     {

@@ -28,9 +28,9 @@ public class Day19 : IDay
 
     public string SolvePart1(string input)
     {
-        var sections = input.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        var towels = sections[0].Split(", ", StringSplitOptions.RemoveEmptyEntries);
-        var designs = sections[1].Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var sections = input.Split(Environment.NewLine + Environment.NewLine);
+        var towels = sections[0].Split(", ");
+        var designs = sections[1].Split(Environment.NewLine);
 
         memo = [];
         return $"{designs.Count(d => TowelDesignCount(d, towels) > 0)}";
@@ -38,9 +38,9 @@ public class Day19 : IDay
 
     public string SolvePart2(string input)
     {
-        var sections = input.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        var towels = sections[0].Split(", ", StringSplitOptions.RemoveEmptyEntries);
-        var designs = sections[1].Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var sections = input.Split(Environment.NewLine + Environment.NewLine);
+        var towels = sections[0].Split(", ");
+        var designs = sections[1].Split(Environment.NewLine);
 
         memo = [];
         return $"{designs.Sum(d => TowelDesignCount(d, towels))}";

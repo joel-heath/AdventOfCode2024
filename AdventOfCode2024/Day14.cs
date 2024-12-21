@@ -32,7 +32,7 @@ public class Day14 : IDay
     public string SolvePart1(string input)
     {
         var (width, height) = UnitTestsP1.ContainsKey(input) ? (11, 7) : (101, 103);
-        var robots = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+        var robots = input.Split(Environment.NewLine)
             .Select(l => Utils.GetLongs(l).ToList())
             .Select(l => (p: new Point(l[0], l[1]), v: new Point(l[2], l[3])))
             .Select(r => MoveRobot(r, width, height, 100))
@@ -44,7 +44,7 @@ public class Day14 : IDay
     public string SolvePart2(string input)
     {
         var (width, height) = UnitTestsP1.ContainsKey(input) ? (11, 7) : (101, 103);
-        var robots = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+        var robots = input.Split(Environment.NewLine)
             .Select(l => Utils.GetLongs(l).ToList())
             .Select(l => (p: new Point(l[0], l[1]), v: new Point(l[2], l[3])))
             .ToArray();

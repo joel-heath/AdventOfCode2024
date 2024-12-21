@@ -15,8 +15,8 @@ public class Day02 : IDay
     static bool IsValid(int[] report)
         => report.Skip(1).Aggregate(
                 (prev: report[0], dir: report[1] > report[0] ? 1 : -1, valid: true),
-                (acc, curr) => (curr, acc.dir, acc.valid && acc.dir * (curr - acc.prev) >= 1 && acc.dir * (curr - acc.prev) <= 3)
-            ).valid;
+                (acc, curr) => (curr, acc.dir, acc.valid && acc.dir * (curr - acc.prev) >= 1 && acc.dir * (curr - acc.prev) <= 3))
+            .valid;
 
     public string SolvePart1(string input)
         => $"{input.Split(Environment.NewLine)

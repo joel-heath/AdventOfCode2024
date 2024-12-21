@@ -30,7 +30,7 @@ public class Day10 : IDay
 
     private static int Solver(string input, Func<(int y, int x)[], int> counter)
     {
-        var grid = input.Split(Environment.NewLine).Select(z => z.ToCharArray().Select(x => x - '0').ToArray()).ToArray();
+        var grid = input.Split(Environment.NewLine).Select(z => z.Select(x => x - '0').ToArray()).ToArray();
         return grid.SelectMany((r, i) => r.Select((c, j) => counter(Explore(grid, i, j, 0)))).Sum();
     }
 

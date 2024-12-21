@@ -84,9 +84,7 @@ public class Day17 : IDay
             long b = c ^ (a >> (c ^ 7));
 
             if (b % 8 == n)
-            {
                 options.Add(a);
-            }
         }
         return options.SelectMany(o => CalculateInput(outputs, index + 1, o));
     }

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Text;
+﻿using System.Text;
 
 namespace AdventOfCode2024.Utilities;
 
@@ -19,11 +18,16 @@ public class Grid<T>(int x, int y)
         get => points[x, y];
         set => points[x, y] = value;
     }
+    public T this[long x, long y]
+    {
+        get => points[x, y];
+        set => points[x, y] = value;
+    }
 
     public Grid(int x, int y, T defaultValue) : this(x, y)
     {
         foreach (var p in AllPositions())
-            this[p] = defaultValue;
+            points[p.X, p.Y] = defaultValue;
     }
     public Grid(T[][] contents, bool transpose = true) : this(transpose ? contents[0].Length : contents.Length, transpose ? contents.Length : contents[0].Length)
     {
@@ -35,15 +39,29 @@ public class Grid<T>(int x, int y)
             }
         }
     }
-    public Grid(int width, int height, IEnumerable<T> contents) : this(width, height)
+    public Grid(int width, int height, IEnumerable<T> contents, bool transpose = false) : this(width, height)
     {
         var enumerator = contents.GetEnumerator();
-        for (int x = 0; x < Width; x++)
+        if (!transpose)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    enumerator.MoveNext();
+                    points[x, y] = enumerator.Current;
+                }
+            }
+        }
+        else
         {
             for (int y = 0; y < Height; y++)
             {
-                enumerator.MoveNext();
-                this[x, y] = enumerator.Current;
+                for (int x = 0; x < Width; x++)
+                {
+                    enumerator.MoveNext();
+                    points[x, y] = enumerator.Current;
+                }
             }
         }
     }
@@ -184,11 +202,11 @@ public class Grid<T>(int x, int y)
         for (long x = start.X, y = start.Y; (x, y) != end; x += xCmp, y += yCmp)
         {
             if (Contains((x, y)))
-                yield return this[(x, y)];
+                yield return points[x, y];
         }
 
         if (inclusive && Contains(end))
-            yield return this[end];
+            yield return points[end.X, end.Y];
     }
 
     public override string ToString()

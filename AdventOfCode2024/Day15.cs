@@ -36,7 +36,7 @@ public class Day15 : IDay
 
     public string SolvePart1(string input)
     {
-        var data = input.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var data = input.Split(Environment.NewLine + Environment.NewLine);
         var map = Grid<char>.FromString(data[0]);
         var instructions = string.Concat(data[1].Split(Environment.NewLine));
 
@@ -89,7 +89,7 @@ public class Day15 : IDay
 
     public string SolvePart2(string input)
     {
-        var data = input.Split(Environment.NewLine + Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        var data = input.Split(Environment.NewLine + Environment.NewLine);
         
         var map = Grid<char>.FromString(string.Join(Environment.NewLine,
             data[0].Split(Environment.NewLine).Select(line => string.Concat(line.Select(c => $"{(c == 'O' ? '[' : c)}{(c == '@' ? '.' : c == 'O' ? ']' : c)}")))));
