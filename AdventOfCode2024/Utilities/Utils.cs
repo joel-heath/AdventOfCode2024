@@ -4,6 +4,14 @@ namespace AdventOfCode2024.Utilities;
 
 public static partial class Utils
 {
+    public static T[][] NewJaggedArray<T>(int outerLength, int innerLength)
+    {
+        T[][] jaggedArray = new T[outerLength][];
+        for (int i = 0; i < outerLength; i++)
+            jaggedArray[i] = new T[innerLength];
+        return jaggedArray;
+    }
+
     /// Return true for a given midpoint if the target is to the right or equal to the midpoint (leftBound = midpoint), false if it's to the left.</param>
     public static int BinarySearch(int rightStart, Func<int, bool> midHandler, int leftStart = 0)
     {
@@ -31,6 +39,9 @@ public static partial class Utils
         long r = dividend % divisor;
         return r < 0 ? r + divisor : r;
     }
+
+    public static IEnumerable<long> Range(long count) => Range(0, count);
+    public static IEnumerable<int> Range(int count) => Range(0, count);
 
     /// <summary>
     /// Enumerable.Range but lazily evaluated & can have negative counts to go in reverse

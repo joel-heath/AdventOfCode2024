@@ -11,10 +11,10 @@ Here you can easily navigate each days code and read about how well I think I di
 
 My primary goal in previous years has been to write one-liners, and having done that for some time I now realise with my suite of custom extension methods, anything can be turned into one line.
 
-So my goal this year is to write short, clean, and efficient code, with pure LINQ methods. This means sometimes having some lines for variable initialisations, then a one-liner, and other times means I will create two solutions: one that is (hopefully) fast and readable, the other being a one-liner for the challenge.
+So my goal this year is to write short, clean, and efficient code, with pure LINQ queries. This means sometimes having some lines for variable initialisations, then a one-liner, and other times means I will create two solutions: one that is (hopefully) fast and readable, the other being a one-liner for the challenge.
 
 ### Legend
-🟣 The quintessential one-liner. Each LINQ method is pure and there's no use of my goofy custom extension methods. \
+🟣 The quintessential one-liner. Each LINQ query is pure and there's no use of my goofy custom extension methods. \
 🔵 A one-liner that uses my weird Extension Methods and is probably pretty unreadable, hopefully comes with a normal solution as well. \
 🟢 A couple variable initialisations, perhaps a function, and a one-liner return. \
 🟡 Short, succinct code. \
@@ -45,7 +45,7 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 | [19](AdventOfCode2024/Day19.cs) | 🟢 | A second, very tame puzzle, clearly Eric felt he required more forgiveness. My approach for both parts was as simple as iterate through the available designs and see if any of them get us any closer to creating the required towel, if they do, return true if the towel is complete, recur if not. The only optimisation required is memoisation. |
 | [20](AdventOfCode2024/Day20.cs) | 🟡 | In my opinion today's deserves a better verbosity level, the only thing keeping it from a 🟢 rating is my Dijkstra's implementation. My approach was to perform a full Dijkstra's from the start and the end point, getting the all the distances from every point to the start and finish. Then, it's a matter of iterating through each spot in the map, and performing all possible cheats. Getting the resulting path's length is O(1) since the two Dijkstra's have already been performed. |
 | [21](AdventOfCode2024/Day21.cs) | 🟡 | I'll be honest this one barely scrapes it's rating, but it is indeed mostly just variable initialisations and one-line processing. *I hear* many people solved it by considering multiple routes between any two points and simply picking the shorter; I, however, figured out the closed formula for the optimal path between any two points, so my method is to apply that formula between all pairs of points, then recursively iterate down the robotic chain with a memo. |
-| [22](AdventOfCode2024/Day22.cs) | ⚫ |  |
+| [22](AdventOfCode2024/Day22.cs) | 🟡 | Honestly just very surprised I managed to get the second star, I expected that regular optimisations wouldn't cut it and I'd need a complete rewrite, but simply by ensuring things were only evaluated once with dictionaries and sets, I was able to get my part 2 to 9 seconds on the Release configuration. |
 | [23](AdventOfCode2024/Day23.cs) | ⚫ |  |
 | [24](AdventOfCode2024/Day24.cs) | ⚫ |  |
 | [25](AdventOfCode2024/Day25.cs) | ⚫ |  |

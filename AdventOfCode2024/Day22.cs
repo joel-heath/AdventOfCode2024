@@ -14,115 +14,59 @@ public class Day22 : IDay
         { "1\r\n2\r\n3\r\n2024", "23" }
     };
 
+    private static long Evolve(long num)
+    {
+        num ^= num * 64;
+        num %= 16777216;
+
+        num ^= num / 32;
+        num %= 16777216;
+
+        num ^= num * 2048;
+        num %= 16777216;
+
+        return num;
+    }
+
+    private static long BuysAt(long[][] prices, Dictionary<string, int>[] changes, string changeSequence)
+        => prices.Select((p, i) =>
+            changes[i].TryGetValue(changeSequence, out int index)
+                ? prices[i][index]
+                : 0)
+            .Sum();
 
     public string SolvePart1(string input)
-    {
-        long summation = 0;
-        var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        for (int i = 0; i < lines.Length; i++)
-        {
-            long num = long.Parse(lines[i]);
-
-            for (int j = 0; j < 2000; j++)
-            {
-                num ^= num * 64;
-                num %= 16777216;
-
-                num ^= num / 32;
-                num %= 16777216;
-
-                num ^= num * 2048;
-                num %= 16777216;
-            }
-
-            summation += num;
-        }
-
-        return $"{summation}";
-    }
-
-    private static long BuysAt(int[][] prices, Dictionary<string, int>[] changes, string changeSequence)
-    {
-        long sum = 0;
-        for (int i = 0; i < prices.Length; i++)
-        {
-            if (changes[i].TryGetValue(changeSequence, out int index))
-                sum += prices[i][index];
-        }
-        return sum;
-    }
+        => $"{input.Split(Environment.NewLine)
+            .Sum(l => Utils.Range(2000)
+                .Aggregate(long.Parse(l), (num, _) => Evolve(num)))}";
 
     public string SolvePart2(string input)
     {
         const int priceChanges = 2000;
-        long summation = 0;
 
-        var lines = input.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+        long[] monkeys = input.Split(Environment.NewLine)
+            .Select(long.Parse)
+            .ToArray();
 
-        List<long> monkeys = [];
-        for (int i = 0; i < lines.Length; i++)
-        {
-            long num = long.Parse(lines[i]);
-            monkeys.Add(num);
-        }
-
-        var prices = new int[monkeys.Count][];
-        var changes = new int[monkeys.Count][];
-        for (int i = 0; i < monkeys.Count; i++)
-        {
-            prices[i] = new int[priceChanges];
-            changes[i] = new int[priceChanges];
-        }
+        var prices = Utils.NewJaggedArray<long>(monkeys.Length, priceChanges);
+        var changes = Utils.NewJaggedArray<long>(monkeys.Length, priceChanges);
 
         for (int i = 0; i < priceChanges; i++)
         {
-            for (int j = 0; j < monkeys.Count; j++)
+            for (int j = 0; j < monkeys.Length; j++)
             {
                 long prev = monkeys[j];
-                long num = prev;
-
-                num ^= num * 64;
-                num %= 16777216;
-
-                num ^= num / 32;
-                num %= 16777216;
-
-                num ^= num * 2048;
-                num %= 16777216;
+                long num = Evolve(prev);
 
                 monkeys[j] = num;
-
-                prices[j][i] = (int)(num % 10);
-                changes[j][i] = prices[j][i] - (int)(prev % 10);
+                prices[j][i] = num % 10;
+                changes[j][i] = prices[j][i] - prev % 10;
             }
         }
 
         string[][] changeWindows = changes.Select(m => m.Window(4).Select(w => string.Join(",", w)).ToArray()).ToArray();
         Dictionary<string, int>[] windowLookup = changeWindows.Select(m => m.Select((w, i) => (w, i: i + 3)).DistinctBy(t => t.w).ToDictionary(t => t.w, t => t.i)).ToArray();
 
-        long bestSoFar = -1;
-        HashSet<string> evaluated = [];
-        int cacheHits = 0;
-        for (int i = 3; i < priceChanges; i++)
-        {
-            for (int j = 0; j < monkeys.Count; j++)
-            {
-                var changeWindow = changeWindows[j][i - 3];
-                if (evaluated.Contains(changeWindow))
-                    continue;
-
-                evaluated.Add(changeWindow);
-                var bananas = BuysAt(prices, windowLookup, changeWindow);
-
-                if (bananas > bestSoFar)
-                {
-                    //Console.WriteLine($"New best: {bananas} at iteration {i}, monkey {j}");
-                    //Console.WriteLine(changeWindow);
-                    bestSoFar = bananas;
-                }
-            }
-        }
-
-        return $"{bestSoFar}";
+        return $"{changeWindows.SelectMany(m => m).Distinct().Max(w => BuysAt(prices, windowLookup, w))}";
     }
 }
