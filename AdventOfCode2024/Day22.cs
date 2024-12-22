@@ -1,5 +1,4 @@
 using AdventOfCode2024.Utilities;
-using System.Runtime.InteropServices;
 
 namespace AdventOfCode2024;
 
@@ -42,14 +41,13 @@ public class Day22 : IDay
         return $"{summation}";
     }
 
-    private static long BuysAt(int[][] prices, int[][] changes, int[] changeSequence)
+    private static long BuysAt(int[][] prices, Dictionary<string, int>[] changes, string changeSequence)
     {
         long sum = 0;
         for (int i = 0; i < prices.Length; i++)
         {
-            var index = changes[i].Select((p, i) => (p, i)).Window(4).FirstOrDefault(w => w.Select(w => w.p).SequenceEqual(changeSequence))?[3].i;
-            if (index.HasValue)
-                sum += prices[i][index.Value];
+            if (changes[i].TryGetValue(changeSequence, out int index))
+                sum += prices[i][index];
         }
         return sum;
     }
@@ -77,7 +75,7 @@ public class Day22 : IDay
         }
 
         for (int i = 0; i < priceChanges; i++)
-        {    
+        {
             for (int j = 0; j < monkeys.Count; j++)
             {
                 long prev = monkeys[j];
@@ -99,6 +97,9 @@ public class Day22 : IDay
             }
         }
 
+        string[][] changeWindows = changes.Select(m => m.Window(4).Select(w => string.Join(",", w)).ToArray()).ToArray();
+        Dictionary<string, int>[] windowLookup = changeWindows.Select(m => m.Select((w, i) => (w, i: i + 3)).DistinctBy(t => t.w).ToDictionary(t => t.w, t => t.i)).ToArray();
+
         long bestSoFar = -1;
         HashSet<string> evaluated = [];
         int cacheHits = 0;
@@ -106,28 +107,22 @@ public class Day22 : IDay
         {
             for (int j = 0; j < monkeys.Count; j++)
             {
-                //var num = prices[j][i];
-                var changeSequence = changes[j][(i - 3)..(i + 1)];
-                var seqStr = string.Join(',', changeSequence);
-                if (evaluated.Contains(seqStr))
+                var changeWindow = changeWindows[j][i - 3];
+                if (evaluated.Contains(changeWindow))
                     continue;
 
-                evaluated.Add(seqStr);
-                var bananas = BuysAt(prices, changes, changeSequence);
+                evaluated.Add(changeWindow);
+                var bananas = BuysAt(prices, windowLookup, changeWindow);
 
                 if (bananas > bestSoFar)
                 {
-                    Console.WriteLine($"New best: {bananas} at iteration {i}, monkey {j}");
-                    Console.WriteLine(string.Join(", ", changeSequence));
+                    //Console.WriteLine($"New best: {bananas} at iteration {i}, monkey {j}");
+                    //Console.WriteLine(changeWindow);
                     bestSoFar = bananas;
-                    //bestSequence = changeSequence;
                 }
             }
         }
 
         return $"{bestSoFar}";
     }
-
-    // New best: 2306 at iteration 3, monkey 339
-    // 0, 2, 0, 0
 }
