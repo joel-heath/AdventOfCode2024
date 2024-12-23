@@ -86,10 +86,14 @@ public static class ExtensionMethods
         }
     }
 
-
+    public static IEnumerable<T> DumpInline<T>(this IEnumerable<T> input)
+    {
+        var data = input.ToList();
+        Console.WriteLine($"[{string.Join(", ", input)}]");
+        return data;
+    }
     public static IEnumerable<T> Dump<T>(this IEnumerable<T> input)
         => input.Dump(Environment.NewLine);
-
 
     public static IEnumerable<T> Dump<T>(this IEnumerable<T> input, string delimiter)
     {
