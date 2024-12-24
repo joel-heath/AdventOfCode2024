@@ -7,11 +7,11 @@ public class Day23 : IDay
     public int Day => 23;
     public Dictionary<string, string> UnitTestsP1 => new()
     {
-        { "kh-tc\r\nqp-kh\r\nde-cg\r\nka-co\r\nyn-aq\r\nqp-ub\r\ncg-tb\r\nvc-aq\r\ntb-ka\r\nwh-tc\r\nyn-cg\r\nkh-ub\r\nta-co\r\nde-co\r\ntc-td\r\ntb-wq\r\nwh-td\r\nta-ka\r\ntd-qp\r\naq-cg\r\nwq-ub\r\nub-vc\r\nde-ta\r\nwq-aq\r\nwq-vc\r\nwh-yn\r\nka-de\r\nkh-ta\r\nco-tc\r\nwh-qp\r\ntb-vc\r\ntd-yn", "7" },
+        { "kh-tc\r\nqp-kh\r\nde-cg\r\nka-co\r\nyn-aq\r\nqp-ub\r\ncg-tb\r\nvc-aq\r\ntb-ka\r\nwh-tc\r\nyn-cg\r\nkh-ub\r\nta-co\r\nde-co\r\ntc-td\r\ntb-wq\r\nwh-td\r\nta-ka\r\ntd-qp\r\naq-cg\r\nwq-ub\r\nub-vc\r\nde-ta\r\nwq-aq\r\nwq-vc\r\nwh-yn\r\nka-de\r\nkh-ta\r\nco-tc\r\nwh-qp\r\ntb-vc\r\ntd-yn", "7" }
     };
     public Dictionary<string, string> UnitTestsP2 => new()
     {
-        { "kh-tc\r\nqp-kh\r\nde-cg\r\nka-co\r\nyn-aq\r\nqp-ub\r\ncg-tb\r\nvc-aq\r\ntb-ka\r\nwh-tc\r\nyn-cg\r\nkh-ub\r\nta-co\r\nde-co\r\ntc-td\r\ntb-wq\r\nwh-td\r\nta-ka\r\ntd-qp\r\naq-cg\r\nwq-ub\r\nub-vc\r\nde-ta\r\nwq-aq\r\nwq-vc\r\nwh-yn\r\nka-de\r\nkh-ta\r\nco-tc\r\nwh-qp\r\ntb-vc\r\ntd-yn", "co,de,ka,ta" },
+        { "kh-tc\r\nqp-kh\r\nde-cg\r\nka-co\r\nyn-aq\r\nqp-ub\r\ncg-tb\r\nvc-aq\r\ntb-ka\r\nwh-tc\r\nyn-cg\r\nkh-ub\r\nta-co\r\nde-co\r\ntc-td\r\ntb-wq\r\nwh-td\r\nta-ka\r\ntd-qp\r\naq-cg\r\nwq-ub\r\nub-vc\r\nde-ta\r\nwq-aq\r\nwq-vc\r\nwh-yn\r\nka-de\r\nkh-ta\r\nco-tc\r\nwh-qp\r\ntb-vc\r\ntd-yn", "co,de,ka,ta" }
     };
 
     private static IEnumerable<HashSet<string>> Find3Cycles(Dictionary<string, HashSet<string>> network, string current, string start, HashSet<string> visited)
