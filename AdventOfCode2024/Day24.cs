@@ -17,44 +17,28 @@ public class Day24 : IDay
         var registers = sections[0].Split(Environment.NewLine)
             .Select(l => l.Split(": "))
             .ToDictionary(l => l[0], l => l[1] == "1");
+        Dictionary<string, (string op1, string op2, string opCode)> map =
+            sections[1].Split(Environment.NewLine).Select(l => l.Split(' '))
+            .ToDictionary(l => l[^1], l => (l[0], l[2], l[1]));
 
-        Dictionary<string, (string op1, string op2, string opCode)> map = [];
-        int zRegCount = 0;
-        foreach (var inst in sections[1].Split(Environment.NewLine).Select(l => l.Split(' ')))
-        {
-            var reg1 = inst[0];
-            var operation = inst[1];
-            var reg2 = inst[2];
-            var regRes = inst[4];
-
-            map[regRes] = (reg1, reg2, operation);
-
-            if (regRes[0] == 'z')
-                zRegCount++;
-        }
-
-        return (registers, map, zRegCount);
+        return (registers, map, map.Keys.Count(k => k[0] == 'z'));
     }
 
     private static bool EvaluateRegister(Dictionary<string, (string op1, string op2, string opCode)> map, Dictionary<string, bool> registers, string register)
     {
         var (op1, op2, opCode) = map[register];
-        
         var val1 = registers.TryGetValue(op1, out bool v1)
             ? v1 : EvaluateRegister(map, registers, op1);
         var val2 = registers.TryGetValue(op2, out bool v2)
             ? v2 : EvaluateRegister(map, registers, op2);
 
-        var result = opCode switch
+        return registers[register] = opCode switch
         {
             "AND" => val1 & val2,
             "OR" => val1 | val2,
             "XOR" => val1 ^ val2,
             _ => throw new NotImplementedException()
         };
-
-        registers[register] = result;
-        return result;
     }
 
     public string SolvePart1(string input)
@@ -70,38 +54,18 @@ public class Day24 : IDay
     {
         var (registers, map, zRegCount) = ParseInput(input);
 
-        // z     = x ^ y ^ c_in
-        // c_out = (a & b) | ((a ^ b) & c_in)
-
-        HashSet<string> swaps = [];
-        foreach (var connection in map)
-        {
-            var res = connection.Key;
-            var (op1, op2, opCode) = connection.Value;
-            bool valid = true;
-
-            // All outputs must by XORs, except the last bit which is the carry out bit of the last x & y bits.
-            if (res[0] == 'z' && opCode != "XOR" && res != $"z{zRegCount - 1}")
-                valid = false;
-
-            // All XORs must be have at least an x input, y input or z output. If has none of these it's invalid.
-            if (opCode == "XOR" && res[0] != 'z' && op1[0] != 'x' && op2[0] != 'x' && op1[0] != 'y' && op2[0] != 'y')
-                valid = false;
-
-            // All ANDs (except x00 & y00) must go into ORs. (x00 & y00 goes straight into XOR with x01, x02)
-            if (opCode == "AND" && !(op1 == "x00" || op2 == "x00")) 
-                if (map.Where(kvp => kvp.Value.op1 == res || kvp.Value.op2 == res).Any(kvp => kvp.Value.opCode != "OR"))
-                    valid = false;
-
-            // All XORs must NOT go into ORs.
-            if (opCode == "XOR")
-                if (map.Where(kvp => kvp.Value.op1 == res || kvp.Value.op2 == res).Any(kvp => kvp.Value.opCode == "OR"))
-                    valid = false;
-
-            if (!valid)
-                swaps.Add(res);
-        }
-
-        return string.Join(',', swaps.Order());
+        return $"{string.Join(',',
+            map.Select(c => (res: c.Key, c.Value.op1, c.Value.op2, c.Value.opCode))
+                .Where(c =>
+                    // All outputs must by XORs, except the last bit which is the carry out bit of the last x & y bits.
+                    (c.res[0] == 'z' && c.opCode != "XOR" && c.res != $"z{zRegCount - 1}")
+                    // All XORs must be have at least an x input, y input or z output. If has none of these it's invalid.
+                    || (c.opCode == "XOR" && c.res[0] != 'z' && c.op1[0] != 'x' && c.op2[0] != 'x' && c.op1[0] != 'y' && c.op2[0] != 'y')
+                    // All ANDs (except x00 & y00) must go into ORs. (x00 & y00 goes straight into XOR with x01, x02)
+                    || (c.opCode == "AND" && !(c.op1 == "x00" || c.op2 == "x00") && map.Where(kvp => kvp.Value.op1 == c.res || kvp.Value.op2 == c.res).Any(kvp => kvp.Value.opCode != "OR"))
+                    // All XORs must NOT go into ORs.
+                    || (c.opCode == "XOR" && map.Where(kvp => kvp.Value.op1 == c.res || kvp.Value.op2 == c.res).Any(kvp => kvp.Value.opCode == "OR")))
+                .Select(c => c.res)
+                .Order())}";
     }
 }
