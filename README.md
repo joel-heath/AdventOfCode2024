@@ -48,4 +48,6 @@ So my goal this year is to write short, clean, and efficient code, with pure LIN
 | [22](AdventOfCode2024/Day22.cs) | 🟡 | Honestly just very surprised I managed to get the second star, I expected that regular optimisations wouldn't cut it and I'd need a complete rewrite, but simply by ensuring things were only evaluated once with dictionaries and sets, I was able to get my part 2 to 9 seconds on the Release configuration. |
 | [23](AdventOfCode2024/Day23.cs) | 🟡 | My approach for part 2 was to get all 3-cycles from part 1, get all the nodes connected to those 3, and iterate through adding them to the collection as long they connect to all the extra nodes added so far. |
 | [24](AdventOfCode2024/Day24.cs) | 🟢 | My method for part 2 is to iterate through each connection and perform a load of checks based on the recurrence relation for output bits, if any fail then that node is included in the output. Very glad I chose to go about it this way as it lends itself nicely to reducing to a one-liner. |
-| [25](AdventOfCode2024/Day25.cs) | ⚫ |  |
+| [25](AdventOfCode2024/Day25.cs) | 🟢 | I solved the puzzle in the same way I read it, divided the schematics into locks and keys, counted the number of cells taken up by the schematic in each column, then paired every lock with every key and checked if the sum of the number of cells taken up exceeds the total length of column. |
+
+Merry Christmas!

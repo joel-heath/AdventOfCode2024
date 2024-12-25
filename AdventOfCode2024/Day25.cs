@@ -7,7 +7,7 @@ public class Day25 : IDay
     public int Day => 25;
     public Dictionary<string, string> UnitTestsP1 => new()
     {
-        { "#####\r\n.####\r\n.####\r\n.####\r\n.#.#.\r\n.#...\r\n.....\r\n\r\n#####\r\n##.##\r\n.#.##\r\n...##\r\n...#.\r\n...#.\r\n.....\r\n\r\n.....\r\n#....\r\n#....\r\n#...#\r\n#.#.#\r\n#.###\r\n#####\r\n\r\n.....\r\n.....\r\n#.#..\r\n###..\r\n###.#\r\n###.#\r\n#####\r\n\r\n.....\r\n.....\r\n.....\r\n#....\r\n#.#..\r\n#.#.#\r\n#####", "3" },
+        { "#####\r\n.####\r\n.####\r\n.####\r\n.#.#.\r\n.#...\r\n.....\r\n\r\n#####\r\n##.##\r\n.#.##\r\n...##\r\n...#.\r\n...#.\r\n.....\r\n\r\n.....\r\n#....\r\n#....\r\n#...#\r\n#.#.#\r\n#.###\r\n#####\r\n\r\n.....\r\n.....\r\n#.#..\r\n###..\r\n###.#\r\n###.#\r\n#####\r\n\r\n.....\r\n.....\r\n.....\r\n#....\r\n#.#..\r\n#.#.#\r\n#####", "3" }
     };
     public Dictionary<string, string> UnitTestsP2 => new()
     {
@@ -16,37 +16,21 @@ public class Day25 : IDay
 
     public string SolvePart1(string input)
     {
-        long summation = 0;
-
-        var schematics = input.Split(Environment.NewLine + Environment.NewLine);
-
-        var data = schematics
+        (int[] schem, bool isKey, int totalHeight)[] schematics = input
+            .Split(Environment.NewLine + Environment.NewLine)
             .Select(schem => schem.Split(Environment.NewLine))
-            .Select(rows => (rows, isKey: rows[0].Count(c => c == '#') == 0))
-            .Select(data => (data.rows
+            .Select(rows => (rows, isKey: !rows[0].Any(c => c == '#')))
+            .Select(data => (data: data.rows
                 .Transpose()
-                .Select(column => column.Count(c => c == '#'))
+                .Select(column => (pinLength: column.Count(c => c == '#'), totalHeight: column.Length))
                 .ToArray(), data.isKey))
+            .Select(data => (data.data.Select(c => c.pinLength).ToArray(), data.isKey, data.data[0].totalHeight))
             .ToArray();
 
-        var fullKeyLength = schematics
-            .Select(schem => schem.Split(Environment.NewLine)
-                .Transpose()
-                .First().Length).First();
-
-        var keyLockFits = 0;
-        foreach (var (@lock, _) in data.Where(s => !s.isKey))
-        {
-            foreach (var (key, _) in data.Where(s => s.isKey))
-            {
-                if (@lock.Zip(key).All(t => t.First + t.Second <= fullKeyLength))
-                {
-                    keyLockFits++;
-                }
-            }
-        }
-
-        return $"{keyLockFits}";
+        return $"{schematics.Where(s => !s.isKey)
+            .Select(@lock => schematics.Where(s => s.isKey)
+                .Count(key => @lock.schem.Zip(key.schem).All(t => t.First + t.Second <= @lock.totalHeight)))
+            .Sum()}";
     }
 
     public string SolvePart2(string input) => "Deliver the chronicle.";
